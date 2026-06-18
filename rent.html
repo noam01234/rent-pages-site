@@ -629,7 +629,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v294</div>
+    <div class="footer">rent.html v295</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -641,7 +641,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v294";
+    const RENT_PAGE_VERSION = "v295";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -1135,15 +1135,15 @@ ${description ? `
 </script>
 
 <script>
-(function rentIndependentImageViewerV294() {
-  let sourcesV294 = [];
-  let indexV294 = 0;
+(function rentIndependentImageViewerV295() {
+  let sourcesV295 = [];
+  let indexV295 = 0;
 
-  function getSrcV294(img) {
+  function getSrcV295(img) {
     return img ? (img.currentSrc || img.src || img.getAttribute("src") || "") : "";
   }
 
-  function isApartmentPhotoV294(src) {
+  function isApartmentPhotoV295(src) {
     return /^https?:\/\//i.test(src) &&
            (
              src.indexOf("/storage/v1/object/public/rent-photos/") >= 0 ||
@@ -1152,7 +1152,7 @@ ${description ? `
            );
   }
 
-  function uniqueV294(list) {
+  function uniqueV295(list) {
     const seen = {};
     return list.filter(function(src) {
       if (!src || seen[src]) return false;
@@ -1161,21 +1161,43 @@ ${description ? `
     });
   }
 
-  function collectSourcesV294() {
+  function collectSourcesV295() {
     const list = [];
 
     document.querySelectorAll("img").forEach(function(img) {
-      const src = getSrcV294(img);
-      if (isApartmentPhotoV294(src)) {
+      const src = getSrcV295(img);
+      if (isApartmentPhotoV295(src)) {
         list.push(src);
       }
     });
 
-    sourcesV294 = uniqueV294(list);
-    return sourcesV294;
+    sourcesV295 = uniqueV295(list);
+    return sourcesV295;
   }
 
-  function ensureViewerV294() {
+  function isThumbnailImageV295(img) {
+    if (!img) return false;
+
+    const thumbParent = img.closest(
+      ".thumb, .thumbnail, .thumbs, .thumbnails, .gallery-thumb, .gallery-thumbs, [class*='thumb'], [id*='thumb']"
+    );
+
+    if (thumbParent) {
+      return true;
+    }
+
+    const rect = img.getBoundingClientRect ? img.getBoundingClientRect() : null;
+
+    if (rect && rect.width > 0 && rect.height > 0) {
+      if (rect.width <= 180 && rect.height <= 180) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function ensureViewerV295() {
     if (document.getElementById("rentViewerV294")) {
       return;
     }
@@ -1195,63 +1217,63 @@ ${description ? `
 
     document.body.appendChild(viewer);
 
-    document.getElementById("rentViewerCloseV294").addEventListener("click", closeV294);
+    document.getElementById("rentViewerCloseV294").addEventListener("click", closeV295);
     document.getElementById("rentViewerPrevV294").addEventListener("click", function(event) {
       event.preventDefault();
       event.stopPropagation();
-      moveV294(-1);
+      moveV295(-1);
     });
     document.getElementById("rentViewerNextV294").addEventListener("click", function(event) {
       event.preventDefault();
       event.stopPropagation();
-      moveV294(1);
+      moveV295(1);
     });
 
     viewer.addEventListener("click", function(event) {
       if (event.target === viewer) {
-        closeV294();
+        closeV295();
       }
     });
   }
 
-  function renderV294() {
-    ensureViewerV294();
+  function renderV295() {
+    ensureViewerV295();
 
-    if (!sourcesV294.length) {
-      collectSourcesV294();
+    if (!sourcesV295.length) {
+      collectSourcesV295();
     }
 
     const img = document.getElementById("rentViewerImgV294");
     const counter = document.getElementById("rentViewerCounterV294");
 
-    if (!img || !sourcesV294.length) {
+    if (!img || !sourcesV295.length) {
       return;
     }
 
-    if (indexV294 < 0) indexV294 = sourcesV294.length - 1;
-    if (indexV294 >= sourcesV294.length) indexV294 = 0;
+    if (indexV295 < 0) indexV295 = sourcesV295.length - 1;
+    if (indexV295 >= sourcesV295.length) indexV295 = 0;
 
-    img.src = sourcesV294[indexV294];
+    img.src = sourcesV295[indexV295];
 
     if (counter) {
-      counter.textContent = (indexV294 + 1) + " / " + sourcesV294.length;
+      counter.textContent = (indexV295 + 1) + " / " + sourcesV295.length;
     }
   }
 
-  function openV294(src) {
-    collectSourcesV294();
+  function openV295(src) {
+    collectSourcesV295();
 
-    const found = sourcesV294.indexOf(src);
-    indexV294 = found >= 0 ? found : 0;
+    const found = sourcesV295.indexOf(src);
+    indexV295 = found >= 0 ? found : 0;
 
-    ensureViewerV294();
-    renderV294();
+    ensureViewerV295();
+    renderV295();
 
     document.getElementById("rentViewerV294").classList.add("open");
     document.body.style.overflow = "hidden";
   }
 
-  function closeV294() {
+  function closeV295() {
     const viewer = document.getElementById("rentViewerV294");
     if (viewer) {
       viewer.classList.remove("open");
@@ -1259,20 +1281,20 @@ ${description ? `
     document.body.style.overflow = "";
   }
 
-  function moveV294(step) {
-    if (!sourcesV294.length) {
-      collectSourcesV294();
+  function moveV295(step) {
+    if (!sourcesV295.length) {
+      collectSourcesV295();
     }
 
-    if (sourcesV294.length < 2) {
+    if (sourcesV295.length < 2) {
       return;
     }
 
-    indexV294 += step;
-    renderV294();
+    indexV295 += step;
+    renderV295();
   }
 
-  function bindClicksV294() {
+  function bindClicksV295() {
     document.addEventListener("click", function(event) {
       const target = event.target;
 
@@ -1280,9 +1302,20 @@ ${description ? `
         return;
       }
 
-      const src = getSrcV294(target);
+      const src = getSrcV295(target);
 
-      if (!isApartmentPhotoV294(src)) {
+      if (!isApartmentPhotoV295(src)) {
+        return;
+      }
+
+      /*
+        Important:
+        Thumbnail clicks must keep the original behavior:
+        clicking a small image only changes the main image.
+        Only clicking the main / large apartment image opens the viewer.
+      */
+      if (isThumbnailImageV295(target)) {
+        setTimeout(collectSourcesV295, 80);
         return;
       }
 
@@ -1293,11 +1326,11 @@ ${description ? `
         event.stopImmediatePropagation();
       }
 
-      openV294(src);
+      openV295(src);
     }, true);
   }
 
-  function bindKeysV294() {
+  function bindKeysV295() {
     document.addEventListener("keydown", function(event) {
       const viewer = document.getElementById("rentViewerV294");
 
@@ -1307,39 +1340,40 @@ ${description ? `
 
       if (event.key === "Escape") {
         event.preventDefault();
-        closeV294();
+        closeV295();
       }
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        moveV294(1);
+        moveV295(1);
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        moveV294(-1);
+        moveV295(-1);
       }
     }, true);
   }
 
-  function initV294() {
-    ensureViewerV294();
-    collectSourcesV294();
-    bindClicksV294();
-    bindKeysV294();
+  function initV295() {
+    ensureViewerV295();
+    collectSourcesV295();
+    bindClicksV295();
+    bindKeysV295();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initV294);
+    document.addEventListener("DOMContentLoaded", initV295);
   } else {
-    initV294();
+    initV295();
   }
 
-  window.openRentImageViewerV294 = openV294;
-  window.moveRentImageViewerV294 = moveV294;
+  window.openRentImageViewerV295 = openV295;
+  window.moveRentImageViewerV295 = moveV295;
 })();
 </script></body>
 </html>
+
 
 
 
