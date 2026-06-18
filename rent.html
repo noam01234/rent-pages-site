@@ -496,59 +496,121 @@
       color: #475569;
     }
 
-    .rent-lightbox-arrow-v293 {
+    .rent-viewer-v294 {
       position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 100000;
-      width: 52px;
-      height: 52px;
-      border: 0;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.72);
-      color: #ffffff;
-      font-size: 34px;
-      font-weight: 900;
-      line-height: 1;
+      inset: 0;
+      z-index: 200000;
       display: none;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      background: rgba(2, 6, 23, 0.88);
+      padding: 18px;
+      direction: ltr;
     }
 
-    .rent-lightbox-arrow-v293:hover {
-      background: rgba(15, 23, 42, 0.88);
-    }
-
-    .rent-lightbox-prev-v293 {
-      left: 16px;
-    }
-
-    .rent-lightbox-next-v293 {
-      right: 16px;
-    }
-
-    body.rent-lightbox-arrows-open-v293 .rent-lightbox-arrow-v293 {
+    .rent-viewer-v294.open {
       display: flex;
     }
 
+    .rent-viewer-img-v294 {
+      max-width: 94vw;
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 14px;
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.45);
+      background: #ffffff;
+    }
+
+    .rent-viewer-close-v294,
+    .rent-viewer-arrow-v294 {
+      position: fixed;
+      z-index: 200001;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.76);
+      color: #ffffff;
+      font-weight: 950;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .rent-viewer-close-v294 {
+      top: 16px;
+      right: 16px;
+      width: 46px;
+      height: 46px;
+      font-size: 30px;
+    }
+
+    .rent-viewer-arrow-v294 {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 54px;
+      height: 54px;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .rent-viewer-prev-v294 {
+      left: 16px;
+    }
+
+    .rent-viewer-next-v294 {
+      right: 16px;
+    }
+
+    .rent-viewer-counter-v294 {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 200001;
+      background: rgba(15, 23, 42, 0.72);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 900;
+      direction: rtl;
+    }
+
     @media (max-width: 650px) {
-      .rent-lightbox-arrow-v293 {
+      .rent-viewer-v294 {
+        padding: 8px;
+      }
+
+      .rent-viewer-img-v294 {
+        max-width: 96vw;
+        max-height: 86vh;
+        border-radius: 10px;
+      }
+
+      .rent-viewer-close-v294 {
+        top: 10px;
+        right: 10px;
+        width: 42px;
+        height: 42px;
+        font-size: 28px;
+      }
+
+      .rent-viewer-arrow-v294 {
         width: 46px;
         height: 46px;
-        font-size: 30px;
-        background: rgba(15, 23, 42, 0.64);
+        font-size: 34px;
+        background: rgba(15, 23, 42, 0.66);
       }
 
-      .rent-lightbox-prev-v293 {
-        left: 10px;
+      .rent-viewer-prev-v294 {
+        left: 8px;
       }
 
-      .rent-lightbox-next-v293 {
-        right: 10px;
+      .rent-viewer-next-v294 {
+        right: 8px;
       }
     }</style>
 </head>
@@ -567,7 +629,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v293</div>
+    <div class="footer">rent.html v294</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -579,7 +641,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v293";
+    const RENT_PAGE_VERSION = "v294";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -1071,12 +1133,26 @@ ${description ? `
   window.rentGallerySwipeV291DisabledByV292 = true;
 })();
 </script>
-<script>
-(function rentSafeLightboxArrowsV293() {
-  let gallerySourcesV293 = [];
-  let currentIndexV293 = 0;
 
-  function uniqueV293(list) {
+<script>
+(function rentIndependentImageViewerV294() {
+  let sourcesV294 = [];
+  let indexV294 = 0;
+
+  function getSrcV294(img) {
+    return img ? (img.currentSrc || img.src || img.getAttribute("src") || "") : "";
+  }
+
+  function isApartmentPhotoV294(src) {
+    return /^https?:\/\//i.test(src) &&
+           (
+             src.indexOf("/storage/v1/object/public/rent-photos/") >= 0 ||
+             src.indexOf("/rent-photos/") >= 0 ||
+             src.indexOf("rent-photos") >= 0
+           );
+  }
+
+  function uniqueV294(list) {
     const seen = {};
     return list.filter(function(src) {
       if (!src || seen[src]) return false;
@@ -1085,207 +1161,186 @@ ${description ? `
     });
   }
 
-  function collectGallerySourcesV293() {
-    const selectors = [
-      ".thumb img",
-      ".thumbnail img",
-      ".gallery img",
-      ".gallery-thumbs img",
-      ".main-image-wrap img",
-      "#mainImage",
-      "#main-image"
-    ];
+  function collectSourcesV294() {
+    const list = [];
 
-    let list = [];
-
-    selectors.forEach(function(selector) {
-      document.querySelectorAll(selector).forEach(function(img) {
-        const src = img.currentSrc || img.src || img.getAttribute("src") || "";
-        if (/^https?:\/\//i.test(src)) {
-          list.push(src);
-        }
-      });
+    document.querySelectorAll("img").forEach(function(img) {
+      const src = getSrcV294(img);
+      if (isApartmentPhotoV294(src)) {
+        list.push(src);
+      }
     });
 
-    gallerySourcesV293 = uniqueV293(list);
-    return gallerySourcesV293;
+    sourcesV294 = uniqueV294(list);
+    return sourcesV294;
   }
 
-  function getVisibleLightboxV293() {
-    const candidates = Array.from(document.querySelectorAll(".lightbox, #lightbox, .image-lightbox, #imageLightbox, [class*='lightbox']"));
-
-    return candidates.find(function(el) {
-      if (!el) return false;
-      const style = window.getComputedStyle(el);
-      return style.display !== "none" &&
-             style.visibility !== "hidden" &&
-             !el.classList.contains("hidden") &&
-             el.offsetParent !== null;
-    }) || null;
-  }
-
-  function getCurrentLightboxImageV293() {
-    const lightbox = getVisibleLightboxV293();
-    return lightbox ? lightbox.querySelector("img") : null;
-  }
-
-  function showArrowsIfNeededV293() {
-    collectGallerySourcesV293();
-
-    const img = getCurrentLightboxImageV293();
-    const hasMany = gallerySourcesV293.length > 1;
-
-    if (img && hasMany) {
-      const src = img.currentSrc || img.src || img.getAttribute("src") || "";
-      const idx = gallerySourcesV293.indexOf(src);
-      if (idx >= 0) currentIndexV293 = idx;
-
-      document.body.classList.add("rent-lightbox-arrows-open-v293");
-    } else {
-      document.body.classList.remove("rent-lightbox-arrows-open-v293");
-    }
-  }
-
-  function hideArrowsV293() {
-    document.body.classList.remove("rent-lightbox-arrows-open-v293");
-  }
-
-  function openSourceV293(src) {
-    const imgs = Array.from(document.querySelectorAll("img"));
-    const match = imgs.find(function(img) {
-      const imgSrc = img.currentSrc || img.src || img.getAttribute("src") || "";
-      return imgSrc === src;
-    });
-
-    if (match) {
-      match.click();
-      setTimeout(showArrowsIfNeededV293, 80);
+  function ensureViewerV294() {
+    if (document.getElementById("rentViewerV294")) {
       return;
     }
 
-    const lightboxImg = getCurrentLightboxImageV293();
-    if (lightboxImg) {
-      lightboxImg.src = src;
-      setTimeout(showArrowsIfNeededV293, 80);
+    const viewer = document.createElement("div");
+    viewer.id = "rentViewerV294";
+    viewer.className = "rent-viewer-v294";
+    viewer.setAttribute("aria-modal", "true");
+    viewer.setAttribute("role", "dialog");
+
+    viewer.innerHTML =
+      '<button type="button" class="rent-viewer-close-v294" id="rentViewerCloseV294" aria-label="סגור">×</button>' +
+      '<button type="button" class="rent-viewer-arrow-v294 rent-viewer-prev-v294" id="rentViewerPrevV294" aria-label="תמונה קודמת">‹</button>' +
+      '<img class="rent-viewer-img-v294" id="rentViewerImgV294" alt="תמונת דירה">' +
+      '<button type="button" class="rent-viewer-arrow-v294 rent-viewer-next-v294" id="rentViewerNextV294" aria-label="תמונה הבאה">›</button>' +
+      '<div class="rent-viewer-counter-v294" id="rentViewerCounterV294"></div>';
+
+    document.body.appendChild(viewer);
+
+    document.getElementById("rentViewerCloseV294").addEventListener("click", closeV294);
+    document.getElementById("rentViewerPrevV294").addEventListener("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      moveV294(-1);
+    });
+    document.getElementById("rentViewerNextV294").addEventListener("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      moveV294(1);
+    });
+
+    viewer.addEventListener("click", function(event) {
+      if (event.target === viewer) {
+        closeV294();
+      }
+    });
+  }
+
+  function renderV294() {
+    ensureViewerV294();
+
+    if (!sourcesV294.length) {
+      collectSourcesV294();
+    }
+
+    const img = document.getElementById("rentViewerImgV294");
+    const counter = document.getElementById("rentViewerCounterV294");
+
+    if (!img || !sourcesV294.length) {
+      return;
+    }
+
+    if (indexV294 < 0) indexV294 = sourcesV294.length - 1;
+    if (indexV294 >= sourcesV294.length) indexV294 = 0;
+
+    img.src = sourcesV294[indexV294];
+
+    if (counter) {
+      counter.textContent = (indexV294 + 1) + " / " + sourcesV294.length;
     }
   }
 
-  function moveV293(step) {
-    collectGallerySourcesV293();
+  function openV294(src) {
+    collectSourcesV294();
 
-    if (gallerySourcesV293.length < 2) return;
+    const found = sourcesV294.indexOf(src);
+    indexV294 = found >= 0 ? found : 0;
 
-    const currentImg = getCurrentLightboxImageV293();
-    if (currentImg) {
-      const currentSrc = currentImg.currentSrc || currentImg.src || currentImg.getAttribute("src") || "";
-      const idx = gallerySourcesV293.indexOf(currentSrc);
-      if (idx >= 0) currentIndexV293 = idx;
-    }
+    ensureViewerV294();
+    renderV294();
 
-    currentIndexV293 += step;
-
-    if (currentIndexV293 < 0) {
-      currentIndexV293 = gallerySourcesV293.length - 1;
-    }
-
-    if (currentIndexV293 >= gallerySourcesV293.length) {
-      currentIndexV293 = 0;
-    }
-
-    openSourceV293(gallerySourcesV293[currentIndexV293]);
+    document.getElementById("rentViewerV294").classList.add("open");
+    document.body.style.overflow = "hidden";
   }
 
-  function ensureButtonsV293() {
-    if (!document.getElementById("rentLightboxPrevV293")) {
-      const prev = document.createElement("button");
-      prev.type = "button";
-      prev.id = "rentLightboxPrevV293";
-      prev.className = "rent-lightbox-arrow-v293 rent-lightbox-prev-v293";
-      prev.textContent = "‹";
-      prev.setAttribute("aria-label", "תמונה קודמת");
-      prev.addEventListener("click", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        moveV293(-1);
-      });
-      document.body.appendChild(prev);
+  function closeV294() {
+    const viewer = document.getElementById("rentViewerV294");
+    if (viewer) {
+      viewer.classList.remove("open");
     }
-
-    if (!document.getElementById("rentLightboxNextV293")) {
-      const next = document.createElement("button");
-      next.type = "button";
-      next.id = "rentLightboxNextV293";
-      next.className = "rent-lightbox-arrow-v293 rent-lightbox-next-v293";
-      next.textContent = "›";
-      next.setAttribute("aria-label", "תמונה הבאה");
-      next.addEventListener("click", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        moveV293(1);
-      });
-      document.body.appendChild(next);
-    }
+    document.body.style.overflow = "";
   }
 
-  function bindEventsV293() {
+  function moveV294(step) {
+    if (!sourcesV294.length) {
+      collectSourcesV294();
+    }
+
+    if (sourcesV294.length < 2) {
+      return;
+    }
+
+    indexV294 += step;
+    renderV294();
+  }
+
+  function bindClicksV294() {
     document.addEventListener("click", function(event) {
       const target = event.target;
 
-      if (target && target.tagName === "IMG") {
-        const src = target.currentSrc || target.src || target.getAttribute("src") || "";
-        const list = collectGallerySourcesV293();
-        const idx = list.indexOf(src);
-
-        if (idx >= 0) {
-          currentIndexV293 = idx;
-          setTimeout(showArrowsIfNeededV293, 80);
-          setTimeout(showArrowsIfNeededV293, 250);
-        }
-      } else {
-        setTimeout(function() {
-          if (!getCurrentLightboxImageV293()) {
-            hideArrowsV293();
-          }
-        }, 120);
+      if (!target || target.tagName !== "IMG") {
+        return;
       }
-    }, true);
 
+      const src = getSrcV294(target);
+
+      if (!isApartmentPhotoV294(src)) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (typeof event.stopImmediatePropagation === "function") {
+        event.stopImmediatePropagation();
+      }
+
+      openV294(src);
+    }, true);
+  }
+
+  function bindKeysV294() {
     document.addEventListener("keydown", function(event) {
-      const img = getCurrentLightboxImageV293();
-      if (!img) return;
+      const viewer = document.getElementById("rentViewerV294");
+
+      if (!viewer || !viewer.classList.contains("open")) {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeV294();
+      }
 
       if (event.key === "ArrowLeft") {
         event.preventDefault();
-        moveV293(1);
+        moveV294(1);
       }
 
       if (event.key === "ArrowRight") {
         event.preventDefault();
-        moveV293(-1);
-      }
-
-      if (event.key === "Escape") {
-        setTimeout(hideArrowsV293, 120);
+        moveV294(-1);
       }
     }, true);
   }
 
-  function initV293() {
-    ensureButtonsV293();
-    bindEventsV293();
-    collectGallerySourcesV293();
+  function initV294() {
+    ensureViewerV294();
+    collectSourcesV294();
+    bindClicksV294();
+    bindKeysV294();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initV293);
+    document.addEventListener("DOMContentLoaded", initV294);
   } else {
-    initV293();
+    initV294();
   }
 
-  window.moveRentLightboxV293 = moveV293;
+  window.openRentImageViewerV294 = openV294;
+  window.moveRentImageViewerV294 = moveV294;
 })();
 </script></body>
 </html>
+
 
 
 
