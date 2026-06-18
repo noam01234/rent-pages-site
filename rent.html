@@ -431,7 +431,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v279</div>
+    <div class="footer">rent.html v280</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -443,7 +443,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v279";
+    const RENT_PAGE_VERSION = "v280";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -464,6 +464,13 @@
 
     function cleanText(value) {
       return String(value || "").trim();
+    }
+
+    function cleanPublicTitle(value) {
+      return cleanText(value)
+        .replace(/\s*[-–—]\s*בניין\s*\d+\s*$/u, "")
+        .replace(/\s*[-–—]\s*בנין\s*\d+\s*$/u, "")
+        .trim();
     }
 
     function isUrl(value) {
@@ -576,7 +583,7 @@
 
       return `
         <section class="section">
-          <h2>מחירים לפי חדר</h2>
+          <h2>חדרים פנויים:</h2>
           <div class="room-prices">
             ${roomPrices.map(function(item) {
               return `
@@ -595,7 +602,7 @@
       const app = document.getElementById("app");
       const headerTitle = document.getElementById("headerTitle");
 
-      const title = cleanText(row.title) || "דירה להשכרה";
+      const title = cleanPublicTitle(row.title) || "דירה להשכרה";
       const address = cleanText(row.address);
       const price = formatPrice(row.price || row.starting_price);
       const description = cleanText(row.description);
@@ -635,16 +642,7 @@
             </section>
 
             <section class="details-panel">
-              ${address ? `<div class="address">${escapeHtml(address)}</div>` : ""}
-
-              ${price ? `
-                <div class="price-box">
-                  <div class="price-label">מחיר</div>
-                  <div class="price-value">${escapeHtml(price)}</div>
-                </div>
-              ` : ""}
-
-              ${description ? `
+${description ? `
                 <section class="section">
                   <h2>תיאור הדירה</h2>
                   <p>${escapeHtml(description)}</p>
@@ -762,6 +760,7 @@
   </script>
 </body>
 </html>
+
 
 
 
