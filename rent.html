@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>דף דירה להשכרה</title>
+  <title>YoSeF - פרטי דירה</title>
   <meta name="description" content="דף מידע לדירה להשכרה">
   <style>
     :root {
@@ -434,6 +434,30 @@
         font-size: 21px;
         padding: 14px 12px;
       }
+    }
+    .rent-contact-line-v288 {
+      display: none !important;
+    }
+
+    .rent-contact-line-v289 {
+      margin: 20px 0 4px 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      text-align: center;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 950;
+      color: #0f172a;
+    }
+
+    @media (max-width: 650px) {
+      .rent-contact-line-v289 {
+        font-size: 21px;
+        padding: 14px 12px;
+      }
     }</style>
 </head>
 <body>
@@ -451,7 +475,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v288</div>
+    <div class="footer">rent.html v289</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -463,7 +487,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v288";
+    const RENT_PAGE_VERSION = "v289";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -611,8 +635,7 @@
                   <span>${escapeHtml(item.room || "חדר")}</span>
                   <span>${escapeHtml(formatPrice(item.price))}</span>
                 </div>
-          <div class="rent-contact-line-v288">לפרטים: נועם - 054-5668879</div>
-              `;
+`;
             }).join("")}
           </div>
         </section>
@@ -779,8 +802,87 @@ ${description ? `
 
     loadPage();
   </script>
-</body>
+
+<script>
+(function rentContactAndTitleV289() {
+  const CONTACT_TEXT_V289 = "לפרטים: נועם - 054-5668879";
+  const PAGE_TITLE_V289 = "YoSeF - פרטי דירה";
+
+  function cleanTextV289(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+
+  function setPageTitleV289() {
+    document.title = PAGE_TITLE_V289;
+  }
+
+  function findRoomsHeadingV289() {
+    const headings = Array.from(document.querySelectorAll("h1,h2,h3"));
+    return headings.find(function(item) {
+      return cleanTextV289(item.textContent).includes("חדרים פנויים");
+    }) || null;
+  }
+
+  function findRoomsContainerV289(heading) {
+    if (!heading) return null;
+
+    let node = heading.parentElement;
+
+    while (node && node !== document.body) {
+      const text = cleanTextV289(node.textContent || "");
+      const hasRoomsTitle = text.includes("חדרים פנויים");
+      const hasRoomData = text.includes("₪") || text.includes("בלי מרפסת") || text.includes("עם מרפסת") || text.includes("חדר");
+
+      if (hasRoomsTitle && hasRoomData) {
+        return node;
+      }
+
+      node = node.parentElement;
+    }
+
+    return heading.parentElement || heading;
+  }
+
+  function fixContactLineV289() {
+    setPageTitleV289();
+
+    document.querySelectorAll(".rent-contact-line-v288, .rent-contact-line-v289").forEach(function(item) {
+      item.remove();
+    });
+
+    const heading = findRoomsHeadingV289();
+    if (!heading) return false;
+
+    const container = findRoomsContainerV289(heading);
+    if (!container) return false;
+
+    const contact = document.createElement("div");
+    contact.className = "rent-contact-line-v289";
+    contact.textContent = CONTACT_TEXT_V289;
+
+    container.appendChild(contact);
+
+    return true;
+  }
+
+  function scheduleFixV289() {
+    setTimeout(fixContactLineV289, 50);
+    setTimeout(fixContactLineV289, 250);
+    setTimeout(fixContactLineV289, 800);
+    setTimeout(fixContactLineV289, 1600);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleFixV289);
+  } else {
+    scheduleFixV289();
+  }
+
+  window.fixRentContactLineV289 = fixContactLineV289;
+})();
+</script></body>
 </html>
+
 
 
 
