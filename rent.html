@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -471,8 +471,13 @@
 
         photoUrls: record.photoUrls || {
           main: record.photo_main_url || "",
-          second: record.photo_second_url || "",
-          third: record.photo_third_url || ""
+          second: record.photo_2_url || record.photo_second_url || "",
+          third: record.photo_3_url || record.photo_third_url || "",
+          fourth: record.photo_4_url || "",
+          fifth: record.photo_5_url || "",
+          sixth: record.photo_6_url || "",
+          seventh: record.photo_7_url || "",
+          eighth: record.photo_8_url || ""
         },
 
         whatsappPhone: record.whatsappPhone || record.whatsapp_phone || "972500000000",
@@ -590,6 +595,13 @@
           photo_second_text: item.photos.second || "",
           photo_third_text: item.photos.third || "",
           photo_main_url: item.photoUrls.main || "",
+          photo_2_url: item.photoUrls.second || "",
+          photo_3_url: item.photoUrls.third || "",
+          photo_4_url: item.photoUrls.fourth || "",
+          photo_5_url: item.photoUrls.fifth || "",
+          photo_6_url: item.photoUrls.sixth || "",
+          photo_7_url: item.photoUrls.seventh || "",
+          photo_8_url: item.photoUrls.eighth || "",
           photo_second_url: item.photoUrls.second || "",
           photo_third_url: item.photoUrls.third || "",
           whatsapp_phone: item.whatsappPhone,
@@ -659,6 +671,48 @@
 
       el.textContent = fallbackText || "";
     }
+    /* TSM PATCH: public rent optional gallery photos v245 */
+    function ensureOptionalPhotoSlotV245(id) {
+      let el = document.getElementById(id);
+
+      if (el) {
+        return el;
+      }
+
+      const photo3 = document.getElementById("photo3");
+      if (!photo3 || !photo3.parentElement) {
+        return null;
+      }
+
+      el = document.createElement("div");
+      el.id = id;
+      el.className = photo3.className || "photo-card";
+      el.setAttribute("aria-label", "תמונת דירה");
+
+      photo3.parentElement.appendChild(el);
+      return el;
+    }
+
+    function setOptionalPhotoV245(id, imageUrl, fallbackText) {
+      if (!isUsableImageUrl(imageUrl)) {
+        const existing = document.getElementById(id);
+        if (existing) {
+          existing.style.display = "none";
+          existing.classList.remove("has-image");
+          existing.innerHTML = "";
+        }
+        return;
+      }
+
+      const el = ensureOptionalPhotoSlotV245(id);
+      if (!el) {
+        return;
+      }
+
+      el.style.display = "";
+      setPhoto(id, imageUrl, fallbackText);
+    }
+
     async function copyCurrentApartmentLink() {
       const statusEl = document.getElementById("copyStatus");
       const currentUrl = window.location.href;
@@ -747,10 +801,72 @@
       const photoUrls = data.photoUrls || {};
       const photoTexts = data.photos || {};
 
-      setPhoto("photoMain", photoUrls.main, photoTexts.main);
-      setPhoto("photo2", photoUrls.second, photoTexts.second);
-      setPhoto("photo3", photoUrls.third, photoTexts.third);
+      renderGalleryV246(photoUrls, photoTexts, data.title);
 
+
+    /* TSM PATCH: public rent gallery main image layout v246 */
+    function normalizeGalleryItemsV246(photoUrls, photoTexts, title) {
+      photoUrls = photoUrls || {};
+      photoTexts = photoTexts || {};
+
+      const rawItems = [
+        { url: photoUrls.main, text: photoTexts.main || title || "תמונה ראשית של הדירה" },
+        { url: photoUrls.second, text: photoTexts.second || "תמונת חדר" },
+        { url: photoUrls.third, text: photoTexts.third || "תמונת דירה" },
+        { url: photoUrls.fourth, text: "תמונה רביעית" },
+        { url: photoUrls.fifth, text: "תמונה חמישית" },
+        { url: photoUrls.sixth, text: "תמונה שישית" },
+        { url: photoUrls.seventh, text: "תמונה שביעית" },
+        { url: photoUrls.eighth, text: "תמונה שמינית" }
+      ];
+
+      return rawItems.filter(function(item) {
+        return item && isUsableImageUrl(item.url);
+      });
+    }
+
+    function clearOptionalGallerySlotsV246() {
+      ["photo4", "photo5", "photo6", "photo7", "photo8"].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.style.display = "none";
+        el.classList.remove("has-image");
+        el.innerHTML = "";
+      });
+    }
+
+    function renderGalleryV246(photoUrls, photoTexts, title) {
+      const items = normalizeGalleryItemsV246(photoUrls, photoTexts, title);
+
+      clearOptionalGallerySlotsV246();
+
+      if (!items.length) {
+        setPhoto("photoMain", "", photoTexts && photoTexts.main ? photoTexts.main : "תמונה ראשית של הדירה");
+        setPhoto("photo2", "", photoTexts && photoTexts.second ? photoTexts.second : "תמונת חדר");
+        setPhoto("photo3", "", photoTexts && photoTexts.third ? photoTexts.third : "תמונת דירה");
+        return;
+      }
+
+      setPhoto("photoMain", items[0].url, items[0].text);
+
+      if (items[1]) {
+        setPhoto("photo2", items[1].url, items[1].text);
+      } else {
+        setPhoto("photo2", "", photoTexts && photoTexts.second ? photoTexts.second : "תמונת חדר");
+      }
+
+      if (items[2]) {
+        setPhoto("photo3", items[2].url, items[2].text);
+      } else {
+        setPhoto("photo3", "", photoTexts && photoTexts.third ? photoTexts.third : "תמונת דירה");
+      }
+
+      const optionalIds = ["photo4", "photo5", "photo6", "photo7", "photo8"];
+      for (let i = 3; i < items.length && i < 8; i++) {
+        setOptionalPhotoV245(optionalIds[i - 3], items[i].url, items[i].text);
+      }
+    }
       const encodedMessage = encodeURIComponent(
         data.whatsappMessage +
         "\n\n" +
@@ -1052,6 +1168,8 @@
 </script>
 </body>
 </html>
+
+
 
 
 
