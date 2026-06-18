@@ -2311,8 +2311,473 @@
 
   window.addEventListener("load", scheduleV255);
 })();
+</script><!-- TSM PATCH: public rent clean white all photos gallery v256 -->
+<style>
+  .rent-v256-hidden {
+    display: none !important;
+  }
+
+  #rentCleanHeroV256 {
+    direction: rtl;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 18px;
+    margin: 0 auto 16px auto;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+    color: #0f172a;
+    max-width: 980px;
+    box-sizing: border-box;
+  }
+
+  .rent-v256-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .rent-v256-title-wrap {
+    min-width: 0;
+  }
+
+  .rent-v256-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .rent-v256-title {
+    margin: 8px 0 4px 0;
+    font-size: 28px;
+    line-height: 1.25;
+    font-weight: 950;
+    color: #0f172a;
+  }
+
+  .rent-v256-address {
+    font-size: 15px;
+    font-weight: 800;
+    color: #475569;
+  }
+
+  .rent-v256-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+
+  .rent-v256-main {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f1f5f9;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10);
+  }
+
+  .rent-v256-main img {
+    display: block;
+    width: 100%;
+    height: 430px;
+    object-fit: cover;
+  }
+
+  .rent-v256-thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .rent-v256-thumb {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    height: 101px;
+    border-radius: 13px;
+    overflow: hidden;
+    background: #e2e8f0;
+    cursor: pointer;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.10);
+  }
+
+  .rent-v256-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rent-v256-thumb.is-active {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .rent-v256-count {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #475569;
+    text-align: right;
+  }
+
+  #rentPublicGalleryV253,
+  #rentPublicGalleryV254,
+  #rentPublicGalleryV255,
+  .rent-public-gallery-v253,
+  .rent-public-gallery-v254,
+  [data-hidden-by-v253="true"] {
+    display: none !important;
+  }
+
+  @media (max-width: 760px) {
+    #rentCleanHeroV256 {
+      padding: 14px;
+      border-radius: 18px;
+      margin-bottom: 14px;
+    }
+
+    .rent-v256-top {
+      display: block;
+    }
+
+    .rent-v256-badge {
+      margin-bottom: 6px;
+    }
+
+    .rent-v256-title {
+      font-size: 22px;
+    }
+
+    .rent-v256-gallery {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .rent-v256-main img {
+      height: 270px;
+    }
+
+    .rent-v256-thumbs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .rent-v256-thumb {
+      height: 108px;
+      border-radius: 12px;
+    }
+  }
+</style>
+
+<script>
+(function cleanWhiteAllPhotosGalleryV256() {
+  const SUPABASE_URL_V256 = "https://erhfqlcfwjqehffxetbv.supabase.co";
+  const SUPABASE_ANON_KEY_V256 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
+
+  const PHOTO_COLUMNS_V256 = [
+    "photo_main_url",
+    "photo_2_url",
+    "photo_3_url",
+    "photo_4_url",
+    "photo_5_url",
+    "photo_6_url",
+    "photo_7_url",
+    "photo_8_url"
+  ];
+
+  function getApartmentIdV256() {
+    try {
+      return new URLSearchParams(window.location.search).get("id") || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  async function fetchRowV256(id) {
+    const endpoint =
+      SUPABASE_URL_V256 +
+      "/rest/v1/rent_pages?id=eq." +
+      encodeURIComponent(id) +
+      "&select=*";
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY_V256,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY_V256,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      console.error("v256 fetch failed:", response.status, await response.text());
+      return null;
+    }
+
+    const rows = await response.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : null;
+  }
+
+  function collectUrlsV256(row) {
+    const urls = [];
+
+    PHOTO_COLUMNS_V256.forEach(function(column) {
+      const value = row && row[column] ? String(row[column]).trim() : "";
+      if (value && /^https?:\/\//i.test(value) && urls.indexOf(value) < 0) {
+        urls.push(value);
+      }
+    });
+
+    return urls;
+  }
+
+  function textV256(value, fallback) {
+    const v = value === null || value === undefined ? "" : String(value).trim();
+    return v || fallback || "";
+  }
+
+  function findOldBlueGalleryCardV256() {
+    const existing = document.getElementById("rentCleanHeroV256");
+    const images = Array.from(document.querySelectorAll("img")).filter(function(img) {
+      return !existing || !img.closest("#rentCleanHeroV256");
+    });
+
+    let firstCandidate = null;
+
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+
+      let node = img;
+      let best = null;
+
+      for (let level = 0; level < 10 && node && node.parentElement && node.parentElement !== document.body; level++) {
+        const parent = node.parentElement;
+        const imgCount = parent.querySelectorAll("img").length;
+        const hasTitle = !!parent.querySelector("h1");
+        const rect = parent.getBoundingClientRect ? parent.getBoundingClientRect() : { width: 0, height: 0 };
+        const style = window.getComputedStyle ? window.getComputedStyle(parent) : null;
+        const bg = style ? String(style.background || style.backgroundColor || "") : "";
+
+        if (imgCount >= 2 && (hasTitle || rect.height > 280 || bg.indexOf("rgb(30") >= 0 || bg.indexOf("blue") >= 0 || bg.indexOf("linear-gradient") >= 0)) {
+          best = parent;
+        }
+
+        node = parent;
+      }
+
+      if (best) {
+        firstCandidate = best;
+        break;
+      }
+    }
+
+    return firstCandidate;
+  }
+
+  function hideOldAreasV256() {
+    ["rentPublicGalleryV253", "rentPublicGalleryV254", "rentPublicGalleryV255"].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add("rent-v256-hidden");
+    });
+
+    Array.from(document.querySelectorAll(".rent-public-gallery-v253, .rent-public-gallery-v254, [data-hidden-by-v253='true']")).forEach(function(el) {
+      el.classList.add("rent-v256-hidden");
+    });
+
+    const oldCard = findOldBlueGalleryCardV256();
+    if (oldCard) {
+      oldCard.classList.add("rent-v256-hidden");
+      oldCard.setAttribute("data-hidden-by-v256", "true");
+    }
+
+    Array.from(document.querySelectorAll("p, div, section, article")).forEach(function(el) {
+      if (el.closest("#rentCleanHeroV256")) return;
+
+      const text = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+
+      if (
+        text.indexOf("זהו דף דמו סטטי") >= 0 ||
+        text.indexOf("בשלב הבא ניתן לחבר אותו ל־Supabase") >= 0
+      ) {
+        el.classList.add("rent-v256-hidden");
+      }
+    });
+
+    Array.from(document.querySelectorAll("a, button")).forEach(function(el) {
+      if (el.closest("#rentCleanHeroV256")) return;
+
+      const text = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+
+      if (
+        text.indexOf("WhatsApp") >= 0 ||
+        text.indexOf("וואטסאפ") >= 0 ||
+        text.indexOf("שליחת הודעה") >= 0 ||
+        text.indexOf("העתקת קישור") >= 0 ||
+        text.indexOf("צפיה בפרטים") >= 0 ||
+        text.indexOf("צפייה בפרטים") >= 0
+      ) {
+        el.classList.add("rent-v256-hidden");
+
+        const parent = el.parentElement;
+        if (parent && parent.querySelectorAll("a, button").length >= 2) {
+          parent.classList.add("rent-v256-hidden");
+        }
+      }
+    });
+  }
+
+  function buildHeroV256(row, urls) {
+    const section = document.createElement("section");
+    section.id = "rentCleanHeroV256";
+    section.setAttribute("data-photo-count", String(urls.length));
+
+    const top = document.createElement("div");
+    top.className = "rent-v256-top";
+
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "rent-v256-title-wrap";
+
+    const title = document.createElement("h1");
+    title.className = "rent-v256-title";
+    title.textContent = textV256(row.title, "דירה להשכרה");
+
+    const address = document.createElement("div");
+    address.className = "rent-v256-address";
+    address.textContent = textV256(row.address, "");
+
+    titleWrap.appendChild(title);
+    if (address.textContent) titleWrap.appendChild(address);
+
+    const badge = document.createElement("div");
+    badge.className = "rent-v256-badge";
+    badge.textContent = row && row.is_available === false ? "לא זמין" : "זמין להשכרה";
+
+    top.appendChild(titleWrap);
+    top.appendChild(badge);
+
+    const gallery = document.createElement("div");
+    gallery.className = "rent-v256-gallery";
+
+    const main = document.createElement("div");
+    main.className = "rent-v256-main";
+
+    const mainImg = document.createElement("img");
+    mainImg.src = urls[0];
+    mainImg.alt = "תמונה ראשית של הדירה";
+    mainImg.loading = "eager";
+
+    main.appendChild(mainImg);
+
+    const thumbs = document.createElement("div");
+    thumbs.className = "rent-v256-thumbs";
+
+    urls.forEach(function(url, index) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "rent-v256-thumb" + (index === 0 ? " is-active" : "");
+      button.setAttribute("aria-label", "הצג תמונה " + (index + 1));
+
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "תמונה " + (index + 1) + " של הדירה";
+      img.loading = index < 4 ? "eager" : "lazy";
+
+      button.appendChild(img);
+
+      button.addEventListener("click", function() {
+        mainImg.src = url;
+
+        thumbs.querySelectorAll(".rent-v256-thumb").forEach(function(btn) {
+          btn.classList.remove("is-active");
+        });
+
+        button.classList.add("is-active");
+      });
+
+      thumbs.appendChild(button);
+    });
+
+    gallery.appendChild(main);
+    gallery.appendChild(thumbs);
+
+    const count = document.createElement("div");
+    count.className = "rent-v256-count";
+    count.textContent = urls.length + " תמונות";
+
+    section.appendChild(top);
+    section.appendChild(gallery);
+    section.appendChild(count);
+
+    return section;
+  }
+
+  function insertHeroV256(row, urls) {
+    const old = document.getElementById("rentCleanHeroV256");
+    if (old) old.remove();
+
+    const oldCard = findOldBlueGalleryCardV256();
+    const hero = buildHeroV256(row, urls);
+
+    if (oldCard && oldCard.parentElement) {
+      oldCard.parentElement.insertBefore(hero, oldCard);
+    } else {
+      const main = document.querySelector("main, .container, .card") || document.body;
+      main.insertBefore(hero, main.firstChild);
+    }
+
+    hideOldAreasV256();
+
+    console.log("v256 clean white gallery rendered:", urls.length, urls);
+  }
+
+  async function runV256() {
+    try {
+      const id = getApartmentIdV256();
+      if (!id) return;
+
+      const row = await fetchRowV256(id);
+      const urls = collectUrlsV256(row);
+
+      if (!row || !urls.length) {
+        console.warn("v256 no row or no urls:", row, urls);
+        return;
+      }
+
+      insertHeroV256(row, urls);
+    } catch (err) {
+      console.error("v256 gallery error:", err);
+    }
+  }
+
+  function scheduleV256() {
+    setTimeout(runV256, 100);
+    setTimeout(runV256, 800);
+    setTimeout(runV256, 1800);
+    setTimeout(runV256, 3500);
+    setTimeout(runV256, 6500);
+  }
+
+  window.renderCleanGalleryV256 = runV256;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleV256);
+  } else {
+    scheduleV256();
+  }
+
+  window.addEventListener("load", scheduleV256);
+})();
 </script></body>
 </html>
+
 
 
 
