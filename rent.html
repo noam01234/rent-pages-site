@@ -414,7 +414,27 @@
         display: none;
       }
     }
-  </style>
+  
+    .rent-contact-line-v288 {
+      margin: 18px 0 4px 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+      text-align: center;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 950;
+      color: #0f172a;
+    }
+
+    @media (max-width: 650px) {
+      .rent-contact-line-v288 {
+        font-size: 21px;
+        padding: 14px 12px;
+      }
+    }</style>
 </head>
 <body>
   <div class="page">
@@ -431,7 +451,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v280</div>
+    <div class="footer">rent.html v288</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -443,7 +463,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v280";
+    const RENT_PAGE_VERSION = "v288";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -591,6 +611,7 @@
                   <span>${escapeHtml(item.room || "חדר")}</span>
                   <span>${escapeHtml(formatPrice(item.price))}</span>
                 </div>
+          <div class="rent-contact-line-v288">לפרטים: נועם - 054-5668879</div>
               `;
             }).join("")}
           </div>
@@ -760,6 +781,7 @@ ${description ? `
   </script>
 </body>
 </html>
+
 
 
 
