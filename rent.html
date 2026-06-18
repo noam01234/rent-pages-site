@@ -1166,8 +1166,331 @@
   }
 })();
 </script>
-</body>
+<!-- TSM PATCH: public rent gallery all 8 photos v253 -->
+<style>
+  .rent-public-gallery-v253 {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+    gap: 12px;
+    width: 100%;
+    margin: 16px 0 22px 0;
+    direction: rtl;
+  }
+
+  .rent-public-gallery-main-v253 {
+    width: 100%;
+    min-height: 420px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f1f5f9;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.12);
+  }
+
+  .rent-public-gallery-main-v253 img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rent-public-gallery-thumbs-v253 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    align-content: start;
+  }
+
+  .rent-public-gallery-thumb-v253 {
+    width: 100%;
+    height: 132px;
+    border: 0;
+    padding: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e2e8f0;
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.10);
+  }
+
+  .rent-public-gallery-thumb-v253 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rent-public-gallery-thumb-v253:hover {
+    transform: translateY(-1px);
+  }
+
+  .rent-public-gallery-thumb-v253.is-active-v253 {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 760px) {
+    .rent-public-gallery-v253 {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 12px 0 18px 0;
+    }
+
+    .rent-public-gallery-main-v253 {
+      min-height: 260px;
+      border-radius: 16px;
+    }
+
+    .rent-public-gallery-main-v253 img {
+      height: 260px;
+    }
+
+    .rent-public-gallery-thumbs-v253 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .rent-public-gallery-thumb-v253 {
+      height: 115px;
+      border-radius: 12px;
+    }
+  }
+</style>
+
+<script>
+(function publicRentGalleryAll8V253() {
+  const PHOTO_COLUMNS_V253 = [
+    "photo_main_url",
+    "photo_2_url",
+    "photo_3_url",
+    "photo_4_url",
+    "photo_5_url",
+    "photo_6_url",
+    "photo_7_url",
+    "photo_8_url"
+  ];
+
+  function getApartmentIdV253() {
+    try {
+      return new URLSearchParams(window.location.search).get("id") || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function getSupabaseFromPageV253() {
+    const html = document.documentElement.innerHTML || "";
+
+    const urlMatch = html.match(/https:\/\/[a-zA-Z0-9.-]+\.supabase\.co/);
+    const keyMatch = html.match(/eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/);
+
+    return {
+      url: urlMatch ? urlMatch[0].replace(/\/+$/, "") : "",
+      key: keyMatch ? keyMatch[0] : ""
+    };
+  }
+
+  async function fetchRentRowV253(id) {
+    const settings = getSupabaseFromPageV253();
+
+    if (!settings.url || !settings.key || !id) {
+      return null;
+    }
+
+    const endpoint =
+      settings.url +
+      "/rest/v1/rent_pages?id=eq." +
+      encodeURIComponent(id) +
+      "&select=id," +
+      PHOTO_COLUMNS_V253.join(",");
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "apikey": settings.key,
+        "Authorization": "Bearer " + settings.key,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      console.warn("v253 gallery fetch failed:", response.status, await response.text());
+      return null;
+    }
+
+    const rows = await response.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : null;
+  }
+
+  function collectPhotoUrlsV253(row) {
+    const urls = [];
+
+    PHOTO_COLUMNS_V253.forEach(function(column) {
+      const value = row && row[column] ? String(row[column]).trim() : "";
+      if (value && /^https?:\/\//i.test(value) && urls.indexOf(value) < 0) {
+        urls.push(value);
+      }
+    });
+
+    return urls;
+  }
+
+  function findOldGalleryNodeV253() {
+    const knownIds = [
+      "photoMain",
+      "mainPhoto",
+      "rentMainPhoto",
+      "photo1",
+      "photo2",
+      "photo3",
+      "photo4",
+      "photo5",
+      "photo6",
+      "photo7",
+      "photo8"
+    ];
+
+    let img = null;
+
+    for (let i = 0; i < knownIds.length; i++) {
+      img = document.getElementById(knownIds[i]);
+      if (img) break;
+    }
+
+    if (!img) {
+      img = document.querySelector('img[src*="/storage/v1/object/public/rent-photos"], img[id*="photo" i]');
+    }
+
+    if (!img) {
+      return null;
+    }
+
+    let node = img;
+
+    for (let level = 0; level < 6 && node && node.parentElement; level++) {
+      const parent = node.parentElement;
+      const imageCount = parent.querySelectorAll("img").length;
+
+      if (imageCount >= 2 && parent !== document.body) {
+        return parent;
+      }
+
+      node = parent;
+    }
+
+    return img.parentElement && img.parentElement !== document.body ? img.parentElement : img;
+  }
+
+  function buildGalleryV253(urls) {
+    const gallery = document.createElement("section");
+    gallery.className = "rent-public-gallery-v253";
+    gallery.id = "rentPublicGalleryV253";
+
+    const main = document.createElement("div");
+    main.className = "rent-public-gallery-main-v253";
+
+    const mainImg = document.createElement("img");
+    mainImg.src = urls[0];
+    mainImg.alt = "תמונה ראשית של הדירה";
+    mainImg.loading = "eager";
+
+    main.appendChild(mainImg);
+
+    const thumbs = document.createElement("div");
+    thumbs.className = "rent-public-gallery-thumbs-v253";
+
+    urls.forEach(function(url, index) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "rent-public-gallery-thumb-v253" + (index === 0 ? " is-active-v253" : "");
+      button.setAttribute("aria-label", "הצג תמונה " + (index + 1));
+
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "תמונה " + (index + 1) + " של הדירה";
+      img.loading = index < 4 ? "eager" : "lazy";
+
+      button.appendChild(img);
+
+      button.addEventListener("click", function() {
+        mainImg.src = url;
+
+        thumbs.querySelectorAll(".rent-public-gallery-thumb-v253").forEach(function(btn) {
+          btn.classList.remove("is-active-v253");
+        });
+
+        button.classList.add("is-active-v253");
+      });
+
+      thumbs.appendChild(button);
+    });
+
+    gallery.appendChild(main);
+    gallery.appendChild(thumbs);
+
+    return gallery;
+  }
+
+  function insertGalleryV253(urls) {
+    if (!urls || !urls.length) {
+      return false;
+    }
+
+    const existingV253 = document.getElementById("rentPublicGalleryV253");
+    if (existingV253) {
+      existingV253.remove();
+    }
+
+    const oldGallery = findOldGalleryNodeV253();
+    const newGallery = buildGalleryV253(urls);
+
+    if (oldGallery && oldGallery.parentElement && oldGallery !== document.body) {
+      oldGallery.parentElement.insertBefore(newGallery, oldGallery);
+      oldGallery.style.display = "none";
+      oldGallery.setAttribute("data-hidden-by-v253", "true");
+      return true;
+    }
+
+    const title = document.querySelector("h1, .title, .rent-title");
+    if (title && title.parentElement) {
+      title.parentElement.insertBefore(newGallery, title.nextSibling);
+      return true;
+    }
+
+    document.body.insertBefore(newGallery, document.body.firstChild);
+    return true;
+  }
+
+  async function renderAll8GalleryV253() {
+    const id = getApartmentIdV253();
+    if (!id) return;
+
+    const row = await fetchRentRowV253(id);
+    const urls = collectPhotoUrlsV253(row);
+
+    if (urls.length <= 1) {
+      return;
+    }
+
+    insertGalleryV253(urls);
+  }
+
+  function scheduleGalleryV253() {
+    setTimeout(renderAll8GalleryV253, 100);
+    setTimeout(renderAll8GalleryV253, 700);
+    setTimeout(renderAll8GalleryV253, 1600);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleGalleryV253);
+  } else {
+    scheduleGalleryV253();
+  }
+
+  window.renderAll8GalleryV253 = renderAll8GalleryV253;
+})();
+</script></body>
 </html>
+
 
 
 
