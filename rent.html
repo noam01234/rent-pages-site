@@ -1898,8 +1898,422 @@
 
   window.renderGalleryV254 = renderGalleryV254;
 })();
+</script><!-- TSM PATCH: public rent hardcoded all 8 gallery v255 -->
+<style>
+  #rentPublicGalleryV253,
+  #rentPublicGalleryV254,
+  .rent-public-gallery-v253,
+  [data-hidden-by-v253="true"],
+  .rent-old-gallery-hidden-v254,
+  .rent-demo-actions-hidden-v254,
+  .rent-demo-text-hidden-v254 {
+    display: none !important;
+  }
+
+  body.v255-public-gallery-ready img[id*="photo" i],
+  body.v255-public-gallery-ready [id*="photo" i] img {
+    visibility: hidden;
+  }
+
+  #rentPublicGalleryV255,
+  #rentPublicGalleryV255 img,
+  #rentPublicGalleryV255 button {
+    visibility: visible !important;
+  }
+
+  #rentPublicGalleryV255 {
+    display: block !important;
+    width: 100%;
+    margin: 18px 0 24px 0;
+    direction: rtl;
+  }
+
+  .rent-public-gallery-title-v255 {
+    font-size: 18px;
+    font-weight: 900;
+    color: #0f172a;
+    margin: 0 0 10px 0;
+    text-align: right;
+  }
+
+  .rent-public-gallery-grid-v255 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .rent-public-main-photo-v255 {
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f1f5f9;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.14);
+  }
+
+  .rent-public-main-photo-v255 img {
+    display: block;
+    width: 100%;
+    height: 440px;
+    object-fit: cover;
+  }
+
+  .rent-public-thumbs-v255 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .rent-public-thumb-v255 {
+    width: 100%;
+    height: 104px;
+    padding: 0;
+    border: 0;
+    border-radius: 13px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #e2e8f0;
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.10);
+  }
+
+  .rent-public-thumb-v255 img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rent-public-thumb-v255.is-active-v255 {
+    outline: 3px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .rent-gallery-count-v255 {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #475569;
+    text-align: right;
+  }
+
+  .rent-v255-hidden {
+    display: none !important;
+  }
+
+  @media (max-width: 760px) {
+    #rentPublicGalleryV255 {
+      margin: 12px 0 20px 0;
+    }
+
+    .rent-public-gallery-grid-v255 {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .rent-public-main-photo-v255 img {
+      height: 270px;
+    }
+
+    .rent-public-thumbs-v255 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .rent-public-thumb-v255 {
+      height: 108px;
+      border-radius: 12px;
+    }
+  }
+</style>
+
+<script>
+(function hardcodedAll8PublicGalleryV255() {
+  const SUPABASE_URL_V255 = "https://erhfqlcfwjqehffxetbv.supabase.co";
+  const SUPABASE_ANON_KEY_V255 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
+
+  const PHOTO_COLUMNS_V255 = [
+    "photo_main_url",
+    "photo_2_url",
+    "photo_3_url",
+    "photo_4_url",
+    "photo_5_url",
+    "photo_6_url",
+    "photo_7_url",
+    "photo_8_url"
+  ];
+
+  function getApartmentIdV255() {
+    try {
+      return new URLSearchParams(window.location.search).get("id") || "";
+    } catch (err) {
+      return "";
+    }
+  }
+
+  async function fetchRowV255(apartmentId) {
+    const endpoint =
+      SUPABASE_URL_V255 +
+      "/rest/v1/rent_pages?id=eq." +
+      encodeURIComponent(apartmentId) +
+      "&select=id," +
+      PHOTO_COLUMNS_V255.join(",");
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      cache: "no-store",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY_V255,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY_V255,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error("v255 gallery fetch failed", response.status, text);
+      return null;
+    }
+
+    const rows = await response.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : null;
+  }
+
+  function collectUrlsV255(row) {
+    const urls = [];
+
+    PHOTO_COLUMNS_V255.forEach(function(column) {
+      const value = row && row[column] ? String(row[column]).trim() : "";
+
+      if (value && /^https?:\/\//i.test(value) && urls.indexOf(value) < 0) {
+        urls.push(value);
+      }
+    });
+
+    return urls;
+  }
+
+  function hideDemoTextAndButtonsV255() {
+    Array.from(document.querySelectorAll("p, div, section, article")).forEach(function(el) {
+      const text = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+
+      if (
+        text.indexOf("זהו דף דמו סטטי") >= 0 ||
+        text.indexOf("בשלב הבא ניתן לחבר אותו ל־Supabase") >= 0
+      ) {
+        el.classList.add("rent-v255-hidden");
+      }
+    });
+
+    Array.from(document.querySelectorAll("a, button")).forEach(function(el) {
+      if (el.closest("#rentPublicGalleryV255")) return;
+
+      const text = (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim();
+
+      if (
+        text.indexOf("WhatsApp") >= 0 ||
+        text.indexOf("וואטסאפ") >= 0 ||
+        text.indexOf("שליחת הודעה") >= 0 ||
+        text.indexOf("העתקת קישור") >= 0 ||
+        text.indexOf("צפיה בפרטים") >= 0 ||
+        text.indexOf("צפייה בפרטים") >= 0
+      ) {
+        el.classList.add("rent-v255-hidden");
+
+        const parent = el.parentElement;
+        if (parent && parent.querySelectorAll("a, button").length >= 2) {
+          parent.classList.add("rent-v255-hidden");
+        }
+      }
+    });
+  }
+
+  function hideOldGalleryAreasV255() {
+    ["rentPublicGalleryV253", "rentPublicGalleryV254"].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add("rent-v255-hidden");
+    });
+
+    Array.from(document.querySelectorAll(".rent-public-gallery-v253, .rent-public-gallery-v254, [data-hidden-by-v253='true']")).forEach(function(el) {
+      el.classList.add("rent-v255-hidden");
+    });
+
+    const storageImages = Array.from(document.querySelectorAll('img[src*="/storage/v1/object/public/rent-photos"], img[src*="rent-photos"]'));
+
+    storageImages.forEach(function(img) {
+      if (img.closest("#rentPublicGalleryV255")) return;
+
+      let node = img;
+
+      for (let level = 0; level < 7 && node && node.parentElement && node.parentElement !== document.body; level++) {
+        const parent = node.parentElement;
+        const imgCount = parent.querySelectorAll("img").length;
+
+        if (imgCount >= 2) {
+          parent.classList.add("rent-v255-hidden");
+          return;
+        }
+
+        node = parent;
+      }
+
+      img.classList.add("rent-v255-hidden");
+    });
+  }
+
+  function findTargetV255() {
+    const candidates = [
+      document.querySelector("main"),
+      document.querySelector(".container"),
+      document.querySelector(".card"),
+      document.body
+    ].filter(Boolean);
+
+    const h1 = document.querySelector("h1");
+
+    if (h1 && h1.parentElement) {
+      return {
+        parent: h1.parentElement,
+        before: h1.nextSibling
+      };
+    }
+
+    const parent = candidates[0] || document.body;
+
+    return {
+      parent: parent,
+      before: parent.firstChild
+    };
+  }
+
+  function buildGalleryV255(urls) {
+    const section = document.createElement("section");
+    section.id = "rentPublicGalleryV255";
+    section.setAttribute("data-photo-count", String(urls.length));
+
+    const title = document.createElement("div");
+    title.className = "rent-public-gallery-title-v255";
+    title.textContent = "תמונות הדירה";
+
+    const grid = document.createElement("div");
+    grid.className = "rent-public-gallery-grid-v255";
+
+    const main = document.createElement("div");
+    main.className = "rent-public-main-photo-v255";
+
+    const mainImg = document.createElement("img");
+    mainImg.id = "rentPublicMainImageV255";
+    mainImg.src = urls[0];
+    mainImg.alt = "תמונה ראשית של הדירה";
+    mainImg.loading = "eager";
+
+    main.appendChild(mainImg);
+
+    const thumbs = document.createElement("div");
+    thumbs.className = "rent-public-thumbs-v255";
+
+    urls.forEach(function(url, index) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "rent-public-thumb-v255" + (index === 0 ? " is-active-v255" : "");
+      button.setAttribute("aria-label", "הצג תמונה " + (index + 1));
+
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "תמונה " + (index + 1) + " של הדירה";
+      img.loading = index < 4 ? "eager" : "lazy";
+
+      button.appendChild(img);
+
+      button.addEventListener("click", function() {
+        mainImg.src = url;
+
+        thumbs.querySelectorAll(".rent-public-thumb-v255").forEach(function(btn) {
+          btn.classList.remove("is-active-v255");
+        });
+
+        button.classList.add("is-active-v255");
+      });
+
+      thumbs.appendChild(button);
+    });
+
+    const count = document.createElement("div");
+    count.className = "rent-gallery-count-v255";
+    count.textContent = urls.length + " תמונות";
+
+    grid.appendChild(main);
+    grid.appendChild(thumbs);
+
+    section.appendChild(title);
+    section.appendChild(grid);
+    section.appendChild(count);
+
+    return section;
+  }
+
+  function renderGalleryDomV255(urls) {
+    const old = document.getElementById("rentPublicGalleryV255");
+    if (old) old.remove();
+
+    const target = findTargetV255();
+    const gallery = buildGalleryV255(urls);
+
+    target.parent.insertBefore(gallery, target.before);
+
+    document.body.classList.add("v255-public-gallery-ready");
+
+    hideOldGalleryAreasV255();
+    hideDemoTextAndButtonsV255();
+
+    console.log("v255 gallery rendered:", urls.length, urls);
+  }
+
+  async function runV255() {
+    try {
+      hideDemoTextAndButtonsV255();
+      hideOldGalleryAreasV255();
+
+      const apartmentId = getApartmentIdV255();
+
+      if (!apartmentId) {
+        console.warn("v255 gallery: missing apartment id.");
+        return;
+      }
+
+      const row = await fetchRowV255(apartmentId);
+      const urls = collectUrlsV255(row);
+
+      if (!urls.length) {
+        console.warn("v255 gallery: no photo URLs found.", row);
+        return;
+      }
+
+      renderGalleryDomV255(urls);
+    } catch (err) {
+      console.error("v255 gallery error:", err);
+    }
+  }
+
+  function scheduleV255() {
+    setTimeout(runV255, 100);
+    setTimeout(runV255, 900);
+    setTimeout(runV255, 2200);
+    setTimeout(runV255, 4500);
+  }
+
+  window.renderGalleryV255 = runV255;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleV255);
+  } else {
+    scheduleV255();
+  }
+
+  window.addEventListener("load", scheduleV255);
+})();
 </script></body>
 </html>
+
 
 
 
