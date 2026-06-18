@@ -458,6 +458,42 @@
         font-size: 21px;
         padding: 14px 12px;
       }
+    }
+    .rent-unpublished-page-v290 {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: #f8fafc;
+      direction: rtl;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .rent-unpublished-card-v290 {
+      width: min(560px, 94vw);
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      border-radius: 24px;
+      padding: 30px 22px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+      color: #0f172a;
+    }
+
+    .rent-unpublished-card-v290 h1 {
+      margin: 0 0 12px 0;
+      font-size: 28px;
+      font-weight: 950;
+      color: #0f172a;
+    }
+
+    .rent-unpublished-card-v290 p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 800;
+      color: #475569;
     }</style>
 </head>
 <body>
@@ -475,7 +511,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v289</div>
+    <div class="footer">rent.html v290</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -487,7 +523,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v289";
+    const RENT_PAGE_VERSION = "v290";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -880,8 +916,100 @@ ${description ? `
 
   window.fixRentContactLineV289 = fixContactLineV289;
 })();
+</script>
+<script>
+(function rentPublishGateV290() {
+  const SUPABASE_URL_V290 = "https://erhfqlcfwjqehffxetbv.supabase.co";
+  const SUPABASE_KEY_V290 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
+
+  function cleanV290(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+
+  function getPageIdV290() {
+    const params = new URLSearchParams(window.location.search);
+    return cleanV290(params.get("id") || "17-upper");
+  }
+
+  function isUnpublishedV290(row) {
+    if (!row) return true;
+
+    const status = cleanV290(row.status).toLowerCase();
+
+    return (
+      row.is_available === false ||
+      status === "unpublished" ||
+      status === "not_published" ||
+      status === "not-published" ||
+      status === "private" ||
+      status === "hidden" ||
+      status === "inactive" ||
+      status === "לא לפרסום" ||
+      status === "לא זמין"
+    );
+  }
+
+  function showUnavailableV290() {
+    document.title = "YoSeF - פרטי דירה";
+
+    document.body.innerHTML =
+      '<div class="rent-unpublished-page-v290">' +
+        '<div class="rent-unpublished-card-v290">' +
+          '<h1>הדף אינו זמין כרגע</h1>' +
+          '<p>דף פרטי הדירה אינו פעיל לפרסום בשלב זה.</p>' +
+        '</div>' +
+      '</div>';
+  }
+
+  async function checkPublishStatusV290() {
+    try {
+      const pageId = getPageIdV290();
+      const endpoint =
+        SUPABASE_URL_V290.replace(/\/+$/, "") +
+        "/rest/v1/rent_pages?id=eq." +
+        encodeURIComponent(pageId) +
+        "&select=id,status,is_available";
+
+      const response = await fetch(endpoint, {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          "apikey": SUPABASE_KEY_V290,
+          "Authorization": "Bearer " + SUPABASE_KEY_V290,
+          "Accept": "application/json",
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache"
+        }
+      });
+
+      if (!response.ok) {
+        showUnavailableV290();
+        return;
+      }
+
+      const rows = await response.json();
+      const row = Array.isArray(rows) && rows.length ? rows[0] : null;
+
+      if (isUnpublishedV290(row)) {
+        showUnavailableV290();
+      }
+    } catch (err) {
+      console.error(err);
+      showUnavailableV290();
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", checkPublishStatusV290);
+  } else {
+    checkPublishStatusV290();
+  }
+
+  window.checkRentPublishStatusV290 = checkPublishStatusV290;
+})();
 </script></body>
 </html>
+
 
 
 
