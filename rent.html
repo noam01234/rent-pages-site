@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -785,8 +785,276 @@
 
     loadApartmentPage();
   </script>
+<!-- TSM PATCH: rent TEST room prices v231 -->
+<style>
+  .room-prices-section-v231 {
+    margin-top: 22px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  }
+
+  .room-prices-title-v231 {
+    margin: 0 0 12px 0;
+    font-size: 1.15rem;
+    color: #0f172a;
+    font-weight: 800;
+  }
+
+  .room-prices-list-v231 {
+    display: grid;
+    gap: 10px;
+  }
+
+  .room-price-row-v231 {
+    display: grid;
+    grid-template-columns: 1.4fr 110px 1.3fr 95px;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #f8fafc;
+  }
+
+  .room-price-name-v231 {
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .room-price-value-v231 {
+    font-weight: 900;
+    color: #047857;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .room-price-note-v231 {
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+
+  .room-price-availability-v231 {
+    text-align: center;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 6px 8px;
+    background: #dcfce7;
+    color: #166534;
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+
+  .room-price-availability-v231.unavailable-v231 {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  @media (max-width: 760px) {
+    .room-price-row-v231 {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .room-price-value-v231,
+    .room-price-availability-v231 {
+      text-align: right;
+    }
+  }
+</style>
+
+<script>
+(function rentTestRoomPricesV231() {
+  function escapeHtmlV231(value) {
+    return String(value == null ? "" : value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatMoneyV231(value) {
+    var num = Number(value || 0);
+    if (!Number.isFinite(num) || num <= 0) return "";
+    return "₪" + num.toLocaleString("he-IL");
+  }
+
+  function normalizeRoomPricesV231(raw) {
+    if (!raw) return [];
+
+    var value = raw;
+    if (typeof value === "string") {
+      try {
+        value = JSON.parse(value);
+      } catch (err) {
+        return [];
+      }
+    }
+
+    if (!Array.isArray(value)) return [];
+
+    return value.map(function(item) {
+      var roomName = item.roomName || item.room_name || item.name || "";
+      var price = Number(item.price || item.monthly_price || 0);
+      var note = item.note || item.description || "";
+      var isAvailable = item.isAvailable !== false && item.is_available !== false;
+
+      return {
+        roomName: String(roomName || "").trim(),
+        price: Number.isFinite(price) ? price : 0,
+        note: String(note || "").trim(),
+        isAvailable: isAvailable
+      };
+    }).filter(function(item) {
+      return item.roomName || item.price || item.note;
+    });
+  }
+
+  function getApartmentIdV231() {
+    var params = new URLSearchParams(window.location.search || "");
+    return params.get("id") || "demo1";
+  }
+
+  function updatePriceLabelV231() {
+    var priceBox = document.querySelector(".price-box");
+    if (!priceBox) return;
+
+    var divs = priceBox.querySelectorAll("div");
+    divs.forEach(function(div) {
+      if ((div.textContent || "").trim() === "מחיר חודשי") {
+        div.textContent = "מחיר החל מ־";
+      }
+    });
+  }
+
+  function ensureRoomPricesSectionV231() {
+    var section = document.getElementById("roomPricesSectionV231");
+    if (section) return section;
+
+    section = document.createElement("section");
+    section.id = "roomPricesSectionV231";
+    section.className = "room-prices-section-v231";
+    section.style.display = "none";
+    section.innerHTML = [
+      '<h2 class="room-prices-title-v231">מחירי חדרים</h2>',
+      '<div class="room-prices-list-v231" id="roomPricesListV231"></div>'
+    ].join("");
+
+    var details = document.getElementById("details");
+    if (details && details.parentNode) {
+      details.parentNode.insertBefore(section, details);
+    } else {
+      document.body.appendChild(section);
+    }
+
+    return section;
+  }
+
+  function renderRoomPricesV231(roomPrices) {
+    var section = ensureRoomPricesSectionV231();
+    var list = document.getElementById("roomPricesListV231");
+    if (!section || !list) return;
+
+    var items = normalizeRoomPricesV231(roomPrices);
+
+    if (!items.length) {
+      section.style.display = "none";
+      list.innerHTML = "";
+      return;
+    }
+
+    section.style.display = "block";
+    list.innerHTML = items.map(function(item) {
+      var availabilityText = item.isAvailable ? "זמין" : "לא זמין";
+      var availabilityClass = item.isAvailable
+        ? "room-price-availability-v231"
+        : "room-price-availability-v231 unavailable-v231";
+
+      return [
+        '<div class="room-price-row-v231">',
+        '  <div class="room-price-name-v231">' + escapeHtmlV231(item.roomName || "חדר") + '</div>',
+        '  <div class="room-price-value-v231">' + escapeHtmlV231(formatMoneyV231(item.price)) + '</div>',
+        '  <div class="room-price-note-v231">' + escapeHtmlV231(item.note || "") + '</div>',
+        '  <div class="' + availabilityClass + '">' + availabilityText + '</div>',
+        '</div>'
+      ].join("");
+    }).join("");
+  }
+
+  async function fetchRoomPriceRowV231() {
+    if (typeof SUPABASE_URL === "undefined" || typeof SUPABASE_ANON_KEY === "undefined" || typeof SUPABASE_TABLE === "undefined") {
+      return null;
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !SUPABASE_TABLE) {
+      return null;
+    }
+
+    var apartmentId = getApartmentIdV231();
+    var baseUrl = String(SUPABASE_URL).replace(/\/+$/, "");
+    var table = encodeURIComponent(SUPABASE_TABLE);
+    var url = baseUrl + "/rest/v1/" + table + "?id=eq." + encodeURIComponent(apartmentId) + "&select=id,price,starting_price,room_prices_json";
+
+    var response = await fetch(url, {
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error("Supabase room prices request failed with status " + response.status);
+    }
+
+    var rows = await response.json();
+    return rows && rows.length ? rows[0] : null;
+  }
+
+  async function applyRoomPricesV231() {
+    updatePriceLabelV231();
+    ensureRoomPricesSectionV231();
+
+    try {
+      var row = await fetchRoomPriceRowV231();
+
+      if (!row) {
+        renderRoomPricesV231([]);
+        return;
+      }
+
+      var startingPrice = Number(row.starting_price || row.price || 0);
+      var priceEl = document.getElementById("price");
+
+      if (priceEl && Number.isFinite(startingPrice) && startingPrice > 0) {
+        priceEl.textContent = formatMoneyV231(startingPrice);
+      }
+
+      renderRoomPricesV231(row.room_prices_json || []);
+    } catch (err) {
+      console.warn("TSM PATCH: rent TEST room prices v231 failed:", err);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function() {
+      setTimeout(applyRoomPricesV231, 500);
+      setTimeout(applyRoomPricesV231, 1500);
+    });
+  } else {
+    setTimeout(applyRoomPricesV231, 500);
+    setTimeout(applyRoomPricesV231, 1500);
+  }
+})();
+</script>
 </body>
 </html>
+
+
+
 
 
 
