@@ -494,6 +494,61 @@
       line-height: 1.6;
       font-weight: 800;
       color: #475569;
+    }
+    .lightbox-nav-v291 {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100000;
+      width: 54px;
+      height: 54px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #ffffff;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .lightbox-nav-v291:hover {
+      background: rgba(15, 23, 42, 0.88);
+    }
+
+    .lightbox-prev-v291 {
+      left: 18px;
+    }
+
+    .lightbox-next-v291 {
+      right: 18px;
+    }
+
+    body.lightbox-open-v291 .lightbox-nav-v291 {
+      display: flex;
+    }
+
+    @media (max-width: 650px) {
+      .lightbox-nav-v291 {
+        width: 46px;
+        height: 46px;
+        font-size: 30px;
+        background: rgba(15, 23, 42, 0.62);
+      }
+
+      .lightbox-prev-v291 {
+        left: 10px;
+      }
+
+      .lightbox-next-v291 {
+        right: 10px;
+      }
     }</style>
 </head>
 <body>
@@ -511,7 +566,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v290</div>
+    <div class="footer">rent.html v291</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -523,7 +578,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v290";
+    const RENT_PAGE_VERSION = "v291";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -1007,8 +1062,265 @@ ${description ? `
 
   window.checkRentPublishStatusV290 = checkPublishStatusV290;
 })();
+</script>
+<script>
+(function rentMobileGallerySwipeV291() {
+  let startX = 0;
+  let startY = 0;
+  let isTouching = false;
+
+  function isVisibleV291(el) {
+    if (!el) return false;
+    const style = window.getComputedStyle(el);
+    return style.display !== "none" && style.visibility !== "hidden" && !el.classList.contains("hidden");
+  }
+
+  function getLightboxV291() {
+    const candidates = Array.from(document.querySelectorAll(
+      ".lightbox, #lightbox, .image-lightbox, #imageLightbox, [class*='lightbox']"
+    ));
+
+    return candidates.find(function(el) {
+      return isVisibleV291(el);
+    }) || null;
+  }
+
+  function getAllGalleryImagesV291() {
+    const selectors = [
+      ".thumb img",
+      ".thumbnail img",
+      ".gallery img",
+      ".gallery-thumbs img",
+      ".main-image-wrap img",
+      "#mainImage",
+      "#main-image",
+      "img"
+    ];
+
+    const images = [];
+
+    selectors.forEach(function(selector) {
+      document.querySelectorAll(selector).forEach(function(img) {
+        const src = img.currentSrc || img.src || img.getAttribute("src") || "";
+        if (!src || !/^https?:\/\//i.test(src)) return;
+        if (images.some(function(item) { return item.src === src; })) return;
+        images.push({ el: img, src: src });
+      });
+    });
+
+    return images;
+  }
+
+  function getCurrentImageSrcV291() {
+    const lightbox = getLightboxV291();
+    if (!lightbox) return "";
+
+    const img = lightbox.querySelector("img");
+    return img ? (img.currentSrc || img.src || img.getAttribute("src") || "") : "";
+  }
+
+  function clickImageBySrcV291(src) {
+    const images = getAllGalleryImagesV291();
+    const match = images.find(function(item) {
+      return item.src === src;
+    });
+
+    if (match && match.el) {
+      match.el.click();
+      return true;
+    }
+
+    return false;
+  }
+
+  function setLightboxImageV291(src) {
+    const lightbox = getLightboxV291();
+    if (!lightbox) return false;
+
+    const img = lightbox.querySelector("img");
+    if (img) {
+      img.src = src;
+      return true;
+    }
+
+    return false;
+  }
+
+  function moveGalleryV291(direction) {
+    const images = getAllGalleryImagesV291();
+    if (!images.length) return false;
+
+    const currentSrc = getCurrentImageSrcV291();
+    let currentIndex = images.findIndex(function(item) {
+      return item.src === currentSrc;
+    });
+
+    if (currentIndex < 0) {
+      currentIndex = 0;
+    }
+
+    let nextIndex = currentIndex + direction;
+
+    if (nextIndex < 0) {
+      nextIndex = images.length - 1;
+    }
+
+    if (nextIndex >= images.length) {
+      nextIndex = 0;
+    }
+
+    const nextSrc = images[nextIndex].src;
+
+    if (!clickImageBySrcV291(nextSrc)) {
+      setLightboxImageV291(nextSrc);
+    }
+
+    updateNavVisibilityV291();
+    return true;
+  }
+
+  function ensureNavButtonsV291() {
+    if (!document.getElementById("lightboxPrevV291")) {
+      const prev = document.createElement("button");
+      prev.type = "button";
+      prev.id = "lightboxPrevV291";
+      prev.className = "lightbox-nav-v291 lightbox-prev-v291";
+      prev.setAttribute("aria-label", "תמונה קודמת");
+      prev.textContent = "‹";
+      prev.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        moveGalleryV291(-1);
+      });
+      document.body.appendChild(prev);
+    }
+
+    if (!document.getElementById("lightboxNextV291")) {
+      const next = document.createElement("button");
+      next.type = "button";
+      next.id = "lightboxNextV291";
+      next.className = "lightbox-nav-v291 lightbox-next-v291";
+      next.setAttribute("aria-label", "תמונה הבאה");
+      next.textContent = "›";
+      next.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        moveGalleryV291(1);
+      });
+      document.body.appendChild(next);
+    }
+  }
+
+  function updateNavVisibilityV291() {
+    ensureNavButtonsV291();
+
+    const lightbox = getLightboxV291();
+    const hasLightbox = !!lightbox;
+    const hasMultipleImages = getAllGalleryImagesV291().length > 1;
+
+    if (hasLightbox && hasMultipleImages) {
+      document.body.classList.add("lightbox-open-v291");
+    } else {
+      document.body.classList.remove("lightbox-open-v291");
+    }
+  }
+
+  function bindTouchV291() {
+    document.addEventListener("touchstart", function(event) {
+      const lightbox = getLightboxV291();
+      if (!lightbox || !event.touches || event.touches.length !== 1) {
+        return;
+      }
+
+      const touch = event.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      isTouching = true;
+    }, { passive: true });
+
+    document.addEventListener("touchend", function(event) {
+      if (!isTouching) return;
+
+      const lightbox = getLightboxV291();
+      if (!lightbox || !event.changedTouches || event.changedTouches.length !== 1) {
+        isTouching = false;
+        return;
+      }
+
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+
+      isTouching = false;
+
+      if (Math.abs(dx) < 45) return;
+      if (Math.abs(dx) < Math.abs(dy) * 1.3) return;
+
+      if (dx > 0) {
+        moveGalleryV291(-1);
+      } else {
+        moveGalleryV291(1);
+      }
+    }, { passive: true });
+  }
+
+  function bindKeyboardV291() {
+    document.addEventListener("keydown", function(event) {
+      const lightbox = getLightboxV291();
+      if (!lightbox) return;
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveGalleryV291(1);
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveGalleryV291(-1);
+      }
+    }, true);
+  }
+
+  function observeV291() {
+    const observer = new MutationObserver(function() {
+      updateNavVisibilityV291();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "style"]
+    });
+
+    document.addEventListener("click", function() {
+      setTimeout(updateNavVisibilityV291, 50);
+      setTimeout(updateNavVisibilityV291, 250);
+    }, true);
+  }
+
+  function initV291() {
+    ensureNavButtonsV291();
+    bindTouchV291();
+    bindKeyboardV291();
+    observeV291();
+    updateNavVisibilityV291();
+    setTimeout(updateNavVisibilityV291, 800);
+    setTimeout(updateNavVisibilityV291, 1800);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initV291);
+  } else {
+    initV291();
+  }
+
+  window.moveRentGalleryV291 = moveGalleryV291;
+  window.updateRentGalleryNavV291 = updateNavVisibilityV291;
+})();
 </script></body>
 </html>
+
 
 
 
