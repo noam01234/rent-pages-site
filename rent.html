@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>דירה להשכרה - דמו</title>
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --whatsapp: #25d366;
+      --border: #e5e7eb;
+      --price-bg: #ecfdf5;
+      --price-text: #047857;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #0f172a);
+      color: white;
+      border-radius: 22px;
+      padding: 22px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.22);
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 15px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+
+    .price-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--price-bg);
+      color: var(--price-text);
+      border-radius: 16px;
+      padding: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-size: 28px;
+      white-space: nowrap;
+    }
+
+    .small {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .feature {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .photo {
+      min-height: 190px;
+      border-radius: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(15, 23, 42, 0.92)),
+        radial-gradient(circle at top left, #ffffff, transparent 35%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .photo.secondary {
+      min-height: 130px;
+      background:
+        linear-gradient(135deg, rgba(5, 150, 105, 0.85), rgba(6, 78, 59, 0.92)),
+        radial-gradient(circle at top left, #ffffff, transparent 35%);
+    }
+
+    .buttons {
+      position: sticky;
+      bottom: 0;
+      background: rgba(244, 247, 251, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 10px 0 4px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 14px 16px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-whatsapp {
+      background: var(--whatsapp);
+      color: #073b1a;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    /* photoUrl support marker */
+    .photo.has-image {
+      padding: 0;
+      background: #e5e7eb;
+    }
+
+    .photo.has-image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 190px;
+      object-fit: cover;
+    }
+
+    .photo.secondary.has-image img {
+      min-height: 130px;
+    }
+    /* copyShareLink support marker */
+    .copy-status {
+      min-height: 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: bold;
+      color: #047857;
+      margin-top: -2px;
+    }
+    /* availability support marker */
+    .badge.unavailable {
+      background: rgba(239, 68, 68, 0.22);
+    }
+
+    .price-box.unavailable {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .btn-disabled {
+      background: #e5e7eb;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 18px 0 8px;
+    }
+
+    @media (min-width: 650px) {
+      .page {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .gallery {
+        grid-template-columns: 2fr 1fr;
+      }
+
+      .features {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .buttons {
+        position: static;
+        grid-template-columns: 1fr 1fr;
+        background: transparent;
+        backdrop-filter: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="badge" id="statusBadge">זמין להשכרה</div>
+      <h1 id="title">חדר להשכרה באריאל</h1>
+      <p class="subtitle" id="address">נווה שאנן 17, דירה עליונה</p>
+    </section>
+
+    <section class="card">
+      <div class="price-box">
+        <div>
+          <div>מחיר חודשי</div>
+          <div class="small">לא כולל חשמל ומים</div>
+        </div>
+        <div class="price" id="price">₪1,500</div>
+      </div>
+
+      <p id="description">
+        חדר נעים בדירה משותפת, מתאים לסטודנט או עובד. הדירה כוללת מטבח, מקלחת, שירותים ואזורים משותפים.
+      </p>
+
+      <div class="features">
+        <div class="feature" id="feature1">🏠 דירה עליונה</div>
+        <div class="feature" id="feature2">🛏️ חדר פרטי</div>
+        <div class="feature" id="feature3">🚿 מקלחת משותפת</div>
+        <div class="feature" id="feature4">📍 אריאל</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0;">תמונות</h2>
+
+      <div class="gallery">
+        <div class="photo" id="photoMain">
+          תמונה ראשית של הדירה
+        </div>
+
+        <div>
+          <div class="photo secondary" style="margin-bottom:10px;" id="photo2">
+            תמונת חדר
+          </div>
+          <div class="photo secondary" id="photo3">
+            תמונת מטבח / אזור משותף
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin-top:0;">פרטים נוספים</h2>
+      <p id="details">
+        כניסה גמישה, חוזה מסודר, מתאים למי שמחפש מקום שקט ונגיש.
+      </p>
+      <p class="small">
+        זהו דף דמו סטטי. בשלב הבא ניתן לחבר אותו ל־Supabase כך שהמחיר, הטקסט והתמונות יתעדכנו מתוך מערכת ניהול השוכרים.
+      </p>
+    </section>
+
+    <section class="buttons">
+      <a class="btn btn-whatsapp" id="whatsappBtn" href="#" target="_blank" rel="noopener">
+        שליחת הודעה ב־WhatsApp
+      </a>
+
+      <button class="btn btn-primary" id="copyLinkBtn" type="button">
+        העתקת קישור לדירה
+      </button>
+
+      <div class="copy-status" id="copyStatus" aria-live="polite"></div>
+
+      <a class="btn btn-primary" href="#details">
+        צפייה בפרטים
+      </a>
+    </section>
+
+    <footer>
+      דמו דף פרסום דירה · GitHub Pages Ready
+    </footer>
+  </main>
+  <script>
+    
+    // Supabase fetch support marker
+    // Optional configuration:
+    // Leave these values empty to keep using the local static demo data.
+    // Use only the Supabase anon public key. Never put a service_role key in this file.
+    const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
+    const SUPABASE_TABLE = "rent_pages";
+// Static demo data.
+    // Later this object can be replaced by data loaded from Supabase.
+    const apartments = {
+      demo1: {
+        id: "demo1",
+        title: "חדר להשכרה באריאל",
+        address: "נווה שאנן 17, דירה עליונה",
+        status: "זמין להשכרה",
+        isAvailable: true,
+        price: 1500,
+        description: "חדר נעים בדירה משותפת, מתאים לסטודנט או עובד. הדירה כוללת מטבח, מקלחת, שירותים ואזורים משותפים.",
+        details: "כניסה גמישה, חוזה מסודר, מתאים למי שמחפש מקום שקט ונגיש.",
+        features: [
+          "🏠 דירה עליונה",
+          "🛏️ חדר פרטי",
+          "🚿 מקלחת משותפת",
+          "📍 אריאל"
+        ],
+        photos: {
+          main: "תמונה ראשית של הדירה",
+          second: "תמונת חדר",
+          third: "תמונת מטבח / אזור משותף"
+        },
+        photoUrls: {
+          main: "",
+          second: "",
+          third: ""
+        },
+        whatsappPhone: "972500000000",
+        whatsappMessage: "שלום, ראיתי את דף הדירה ואני מעוניין לקבל פרטים נוספים."
+      },
+
+      demo2: {
+        id: "demo2",
+        title: "חדר עם מרפסת להשכרה",
+        address: "נווה שאנן 46, דירה אמצעית",
+        status: "זמין להשכרה",
+        isAvailable: true,
+        price: 1750,
+        description: "חדר מרווח בדירה משותפת, כולל מרפסת קטנה ואזור שקט. מתאים למי שמחפש חדר משודרג.",
+        details: "המחיר לחדר זה גבוה יותר בגלל המרפסת. חשמל ומים לפי צריכה וחלוקה בין הדיירים.",
+        features: [
+          "🌿 מרפסת",
+          "🛏️ חדר פרטי",
+          "🍳 מטבח משותף",
+          "📍 אריאל"
+        ],
+        photos: {
+          main: "תמונה ראשית - חדר עם מרפסת",
+          second: "תמונת מרפסת",
+          third: "תמונת דירה"
+        },
+        photoUrls: {
+          main: "",
+          second: "",
+          third: ""
+        },
+        whatsappPhone: "972500000000",
+        whatsappMessage: "שלום, ראיתי את דף החדר עם המרפסת ואני מעוניין לקבל פרטים נוספים."
+      },
+
+      demo3: {
+        id: "demo3",
+        title: "חדר לדוגמה שאינו זמין",
+        address: "נווה שאנן 17, דירה תחתונה",
+        status: "לא זמין כרגע",
+        isAvailable: false,
+        price: 1600,
+        description: "דוגמה לדף דירה שכבר אינה זמינה. הדף נשאר קיים, אבל לא מציג אותה כזמינה להשכרה.",
+        details: "בעתיד המערכת תוכל לשנות את הזמינות מתוך Supabase בלי לערוך את הקובץ ידנית.",
+        features: [
+          "⛔ לא זמין",
+          "📄 דף דמו",
+          "🔄 ניתן לעדכון",
+          "📍 אריאל"
+        ],
+        photos: {
+          main: "דירה לא זמינה כרגע",
+          second: "אין תמונות להצגה",
+          third: "בדיקה למצב לא זמין"
+        },
+        photoUrls: {
+          main: "",
+          second: "",
+          third: ""
+        },
+        whatsappPhone: "972500000000",
+        whatsappMessage: "שלום, ראיתי את דף הדירה ואני מעוניין לבדוק אם היא זמינה."      }
+    };
+
+    function getApartmentIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id") || "demo1";
+    }
+    // Supabase data shape support marker
+    // This adapter allows the page to work with both:
+    // 1. The current static demo object.
+    // 2. A future Supabase row using snake_case field names.
+    function normalizeApartmentRecord(record) {
+      if (!record) {
+        return null;
+      }
+
+      return {
+        id: record.id || "",
+        title: record.title || record.name || "",
+        address: record.address || "",
+        status: record.status || (record.is_available === false ? "לא זמין כרגע" : "זמין להשכרה"),
+        isAvailable: record.isAvailable !== undefined ? record.isAvailable : record.is_available !== false,
+        price: Number(record.price || record.monthly_price || 0),
+        description: record.description || "",
+        details: record.details || "",
+
+        features: record.features || [
+          record.feature_1 || "",
+          record.feature_2 || "",
+          record.feature_3 || "",
+          record.feature_4 || ""
+        ],
+
+        photos: record.photos || {
+          main: record.photo_main_text || "תמונה ראשית של הדירה",
+          second: record.photo_second_text || "תמונת חדר",
+          third: record.photo_third_text || "תמונת דירה"
+        },
+
+        photoUrls: record.photoUrls || {
+          main: record.photo_main_url || "",
+          second: record.photo_second_url || "",
+          third: record.photo_third_url || ""
+        },
+
+        whatsappPhone: record.whatsappPhone || record.whatsapp_phone || "972500000000",
+        whatsappMessage: record.whatsappMessage || record.whatsapp_message || "שלום, ראיתי את דף הדירה ואני מעוניין לקבל פרטים נוספים."
+      };
+    }
+
+    function hasSupabaseConfig() {
+      return Boolean(
+        SUPABASE_URL &&
+        SUPABASE_ANON_KEY &&
+        SUPABASE_URL.trim() &&
+        SUPABASE_ANON_KEY.trim()
+      );
+    }
+
+    function buildSupabaseRestUrl(apartmentId) {
+      const baseUrl = SUPABASE_URL.replace(/\/+$/, "");
+      const encodedId = encodeURIComponent(apartmentId);
+      return baseUrl + "/rest/v1/" + SUPABASE_TABLE + "?id=eq." + encodedId + "&select=*&limit=1";
+    }
+
+    async function fetchApartmentFromSupabase(apartmentId) {
+      if (!hasSupabaseConfig()) {
+        return {
+          ok: false,
+          reason: "missing_config",
+          apartment: null
+        };
+      }
+
+      const response = await fetch(buildSupabaseRestUrl(apartmentId), {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Accept": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("Supabase request failed with status " + response.status);
+      }
+
+      const rows = await response.json();
+      const row = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+
+      return {
+        ok: true,
+        reason: row ? "found" : "not_found",
+        apartment: row ? normalizeApartmentRecord(row) : null
+      };
+    }
+
+    async function loadApartmentPage() {
+      const apartmentId = getApartmentIdFromUrl();
+
+      const localApartmentRecord = apartments[apartmentId];
+      const localApartment = normalizeApartmentRecord(localApartmentRecord);
+
+      let selectedApartment = null;
+      let usedLocalFallback = false;
+
+      if (hasSupabaseConfig()) {
+        try {
+          const supabaseResult = await fetchApartmentFromSupabase(apartmentId);
+
+          if (supabaseResult.apartment) {
+            selectedApartment = supabaseResult.apartment;
+          } else {
+            selectedApartment = null;
+          }
+        } catch (err) {
+          console.warn("Supabase fetch failed. Falling back to local demo data.", err);
+          selectedApartment = localApartment;
+          usedLocalFallback = true;
+        }
+      } else {
+        selectedApartment = localApartment;
+        usedLocalFallback = true;
+      }
+
+      if (selectedApartment) {
+        renderApartment(selectedApartment);
+      } else {
+        showNotFound(apartmentId);
+      }
+
+      window.rentDemoSupabaseRows = getSupabaseReadyDemoRows();
+      window.rentPageDebug = {
+        apartmentId: apartmentId,
+        hasSupabaseConfig: hasSupabaseConfig(),
+        usedLocalFallback: usedLocalFallback,
+        selectedApartment: selectedApartment
+      };
+
+      initCopyLinkButton();
+    }
+    function getSupabaseReadyDemoRows() {
+      return Object.values(apartments).map(function (item) {
+        return {
+          id: item.id,
+          title: item.title,
+          address: item.address,
+          status: item.status,
+          is_available: item.isAvailable !== false,
+          price: item.price,
+          description: item.description,
+          details: item.details,
+          feature_1: item.features[0] || "",
+          feature_2: item.features[1] || "",
+          feature_3: item.features[2] || "",
+          feature_4: item.features[3] || "",
+          photo_main_text: item.photos.main || "",
+          photo_second_text: item.photos.second || "",
+          photo_third_text: item.photos.third || "",
+          photo_main_url: item.photoUrls.main || "",
+          photo_second_url: item.photoUrls.second || "",
+          photo_third_url: item.photoUrls.third || "",
+          whatsapp_phone: item.whatsappPhone,
+          whatsapp_message: item.whatsappMessage
+        };
+      });
+    }
+
+    function formatPrice(value) {
+      return new Intl.NumberFormat("he-IL", {
+        style: "currency",
+        currency: "ILS",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = value || "";
+      }
+    }
+    function isUsableImageUrl(value) {
+      if (!value || typeof value !== "string") {
+        return false;
+      }
+
+      const trimmed = value.trim();
+
+      if (!trimmed) {
+        return false;
+      }
+
+      return (
+        trimmed.startsWith("http://") ||
+        trimmed.startsWith("https://") ||
+        trimmed.startsWith("./") ||
+        trimmed.startsWith("../") ||
+        trimmed.startsWith("images/") ||
+        trimmed.startsWith("assets/")
+      );
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function setPhoto(id, imageUrl, fallbackText) {
+      const el = document.getElementById(id);
+
+      if (!el) {
+        return;
+      }
+
+      el.classList.remove("has-image");
+
+      if (isUsableImageUrl(imageUrl)) {
+        el.classList.add("has-image");
+        el.innerHTML = '<img src="' + escapeHtml(imageUrl.trim()) + '" alt="' + escapeHtml(fallbackText || "תמונת דירה") + '" loading="lazy">';
+        return;
+      }
+
+      el.textContent = fallbackText || "";
+    }
+    async function copyCurrentApartmentLink() {
+      const statusEl = document.getElementById("copyStatus");
+      const currentUrl = window.location.href;
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(currentUrl);
+        } else {
+          const tempInput = document.createElement("input");
+          tempInput.value = currentUrl;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
+        }
+
+        if (statusEl) {
+          statusEl.textContent = "הקישור הועתק";
+          window.setTimeout(function () {
+            statusEl.textContent = "";
+          }, 2200);
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.textContent = "לא ניתן היה להעתיק אוטומטית";
+        }
+      }
+    }
+
+    function initCopyLinkButton() {
+      const copyBtn = document.getElementById("copyLinkBtn");
+
+      if (!copyBtn) {
+        return;
+      }
+
+      copyBtn.addEventListener("click", copyCurrentApartmentLink);
+    }
+
+    function showNotFound(apartmentId) {
+      setText("statusBadge", "לא נמצא");
+      setText("title", "דף הדירה לא נמצא");
+      setText("address", "מזהה דירה: " + apartmentId);
+      setText("price", "—");
+      setText("description", "לא נמצאו נתונים עבור הדירה המבוקשת. יש לבדוק שהקישור נכון.");
+      setText("details", "בשלב הדמו קיימים המזהים demo1 ו-demo2 בלבד.");
+      setText("feature1", "🔎 מזהה לא קיים");
+      setText("feature2", "📄 דמו סטטי");
+      setText("feature3", "");
+      setText("feature4", "");
+      setText("photoMain", "לא נמצאו תמונות");
+      setText("photo2", "demo1");
+      setText("photo3", "demo2");
+
+      const whatsappBtn = document.getElementById("whatsappBtn");
+      if (whatsappBtn) {
+        whatsappBtn.style.display = "none";
+      }
+    }
+
+    function renderApartment(data) {
+      const isAvailable = data.isAvailable !== false;
+      const statusBadge = document.getElementById("statusBadge");
+      const priceBox = document.querySelector(".price-box");
+
+      if (statusBadge) {
+        statusBadge.classList.toggle("unavailable", !isAvailable);
+      }
+
+      if (priceBox) {
+        priceBox.classList.toggle("unavailable", !isAvailable);
+      }
+
+      setText("statusBadge", isAvailable ? data.status : "לא זמין כרגע");
+      setText("title", data.title);
+      setText("address", data.address);
+      setText("price", isAvailable ? formatPrice(data.price) : "לא זמין");
+      setText("description", data.description);
+      setText("details", data.details);
+
+      setText("feature1", data.features[0]);
+      setText("feature2", data.features[1]);
+      setText("feature3", data.features[2]);
+      setText("feature4", data.features[3]);
+
+      const photoUrls = data.photoUrls || {};
+      const photoTexts = data.photos || {};
+
+      setPhoto("photoMain", photoUrls.main, photoTexts.main);
+      setPhoto("photo2", photoUrls.second, photoTexts.second);
+      setPhoto("photo3", photoUrls.third, photoTexts.third);
+
+      const encodedMessage = encodeURIComponent(
+        data.whatsappMessage +
+        "\n\n" +
+        data.title +
+        "\n" +
+        data.address +
+        "\n" +
+        window.location.href
+      );
+
+      const whatsappBtn = document.getElementById("whatsappBtn");
+      if (whatsappBtn) {
+        whatsappBtn.style.display = "";
+
+        if (isAvailable) {
+          whatsappBtn.classList.remove("btn-disabled");
+          whatsappBtn.classList.add("btn-whatsapp");
+          whatsappBtn.textContent = "שליחת הודעה ב־WhatsApp";
+          whatsappBtn.href = "https://wa.me/" + data.whatsappPhone + "?text=" + encodedMessage;
+          whatsappBtn.setAttribute("target", "_blank");
+        } else {
+          whatsappBtn.classList.remove("btn-whatsapp");
+          whatsappBtn.classList.add("btn-disabled");
+          whatsappBtn.textContent = "הדירה אינה זמינה כרגע";
+          whatsappBtn.removeAttribute("href");
+          whatsappBtn.removeAttribute("target");
+        }
+      }
+
+      document.title = data.title;
+    }
+
+    loadApartmentPage();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
