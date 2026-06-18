@@ -3,24 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <title>דירה להשכרה</title>
-
-  <!-- TSM RENT PAGE CLEAN v261 -->
-
+  <title>דף דירה להשכרה</title>
+  <meta name="description" content="דף מידע לדירה להשכרה">
   <style>
     :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
+      --blue: #0f4c81;
+      --blue-dark: #0b3a63;
+      --blue-soft: #eaf3ff;
       --text: #0f172a;
       --muted: #64748b;
-      --border: #e2e8f0;
-      --blue: #2563eb;
-      --green: #047857;
-      --greenBg: #ecfdf5;
-      --shadow: 0 14px 34px rgba(15, 23, 42, 0.10);
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --shadow: 0 16px 45px rgba(15, 23, 42, 0.13);
+      --radius: 22px;
     }
 
     * {
@@ -30,280 +26,399 @@
     body {
       margin: 0;
       font-family: Arial, "Segoe UI", sans-serif;
-      background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      background:
+        radial-gradient(circle at top right, rgba(15, 76, 129, 0.14), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 48%, #eef4fb 100%);
+      min-height: 100vh;
     }
 
     .page {
-      width: min(1020px, calc(100% - 28px));
-      margin: 18px auto 28px auto;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 16px;
     }
 
-    .card {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 18px;
+    .top-header {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #ffffff;
+      border-radius: 0 0 26px 26px;
       box-shadow: var(--shadow);
-      margin-bottom: 16px;
+      padding: 18px 18px;
+      margin: -16px -16px 18px -16px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
-    .top {
+    .top-header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 14px;
-      margin-bottom: 14px;
     }
 
-    .badge {
-      display: inline-flex;
+    .logo-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.17);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      display: flex;
       align-items: center;
       justify-content: center;
-      background: #e0f2fe;
-      color: #0369a1;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 13px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      font-size: 28px;
       font-weight: 900;
-      white-space: nowrap;
-      margin-bottom: 8px;
     }
 
-    h1 {
-      margin: 0 0 5px 0;
-      font-size: 30px;
-      line-height: 1.25;
-      font-weight: 950;
+    .header-title-wrap {
+      min-width: 0;
+      flex: 1;
     }
 
-    .address {
-      color: var(--muted);
-      font-size: 15px;
+    .header-kicker {
+      font-size: 13px;
+      opacity: 0.88;
       font-weight: 800;
+      margin-bottom: 4px;
     }
 
-    .gallery {
+    .header-title {
+      margin: 0;
+      font-size: clamp(22px, 5vw, 38px);
+      line-height: 1.15;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .main-card {
+      background: var(--card);
+      border: 1px solid rgba(226, 232, 240, 0.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr);
-      gap: 12px;
-      align-items: start;
+      grid-template-columns: minmax(0, 1.25fr) minmax(310px, 0.75fr);
+      gap: 0;
     }
 
-    .main-photo {
+    .gallery-panel {
+      padding: 16px;
+      border-left: 1px solid var(--line);
+    }
+
+    .main-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
       border-radius: 18px;
       overflow: hidden;
-      background: #eef2f7;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.09);
-    }
-
-    .main-photo img {
-      display: block;
-      width: 100%;
-      height: 430px;
-      object-fit: cover;
-    }
-
-    .thumbs {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 9px;
-      align-content: start;
-    }
-
-    .thumb {
-      border: 0;
-      padding: 0;
-      margin: 0;
-      height: 101px;
-      border-radius: 13px;
-      overflow: hidden;
       background: #e2e8f0;
-      cursor: pointer;
-      box-shadow: 0 5px 14px rgba(15, 23, 42, 0.09);
+      cursor: zoom-in;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.05);
     }
 
-    .thumb img {
-      display: block;
+    .main-image-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
     }
 
-    .thumb.active {
-      outline: 3px solid var(--blue);
-      outline-offset: 2px;
+    .main-image-wrap:hover img {
+      transform: scale(1.015);
     }
 
-    .photo-count {
-      margin-top: 10px;
-      color: var(--muted);
+    .image-count {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(15, 23, 42, 0.76);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 7px 11px;
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 800;
+      backdrop-filter: blur(6px);
     }
 
-    .price-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      background: var(--greenBg);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-
-    .price-label {
-      color: var(--green);
-      font-size: 15px;
-      font-weight: 950;
-    }
-
-    .price-sub {
-      color: var(--muted);
+    .zoom-hint {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0f172a;
+      border-radius: 999px;
+      padding: 7px 11px;
       font-size: 12px;
       font-weight: 800;
     }
 
-    .price {
-      color: var(--green);
-      font-size: 30px;
-      line-height: 1;
-      font-weight: 950;
-      direction: ltr;
-      white-space: nowrap;
-    }
-
-    .details {
-      font-size: 17px;
-      color: #1e293b;
-      white-space: pre-wrap;
-    }
-
-    .room-section {
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
-
-    .room-section h2 {
-      margin: 0 0 10px 0;
-      font-size: 19px;
-      font-weight: 950;
-    }
-
-    .room-grid {
+    .thumbs {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+      margin-top: 12px;
     }
 
-    .room-card {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      background: #f8fafc;
+    .thumb {
+      border: 2px solid transparent;
+      border-radius: 13px;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      background: #e2e8f0;
+      cursor: pointer;
+      padding: 0;
+      outline: none;
     }
 
-    .room-name {
+    .thumb.active {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.14);
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .details-panel {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .address {
+      font-size: 15px;
       color: var(--muted);
-      font-size: 14px;
-      font-weight: 850;
+      font-weight: 800;
+    }
+
+    .price-box {
+      background: var(--blue-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .price-label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
       margin-bottom: 4px;
     }
 
-    .room-price {
-      font-size: 20px;
-      font-weight: 950;
-      direction: ltr;
-      text-align: right;
+    .price-value {
+      color: var(--blue-dark);
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .section h2 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: var(--blue-dark);
+    }
+
+    .section p {
+      margin: 0;
+      color: #334155;
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .room-prices {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .room-price-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 9px 11px;
+      font-weight: 800;
+    }
+
+    .room-price-row span:last-child {
+      color: var(--blue-dark);
+      white-space: nowrap;
     }
 
     .loading,
     .error,
     .empty {
-      background: var(--card);
-      border-radius: 22px;
-      padding: 24px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      font-size: 18px;
-      font-weight: 900;
+      padding: 24px;
       text-align: center;
+      font-size: 18px;
+      font-weight: 800;
       color: var(--muted);
     }
 
     .error {
       color: #b91c1c;
       background: #fff1f2;
+      border-color: #fecdd3;
     }
 
-    .version {
-      margin-top: 18px;
+    .footer {
       text-align: center;
-      color: #94a3b8;
-      font-size: 11px;
-      font-weight: 800;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 16px 0 4px;
     }
 
-    @media (max-width: 760px) {
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.88);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: min(1160px, 96vw);
+      max-height: 88vh;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.45);
+      background: #ffffff;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      border: 0;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 900;
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .lightbox-caption {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      color: #ffffff;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 800;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 850px) {
       .page {
-        width: min(100% - 18px, 1020px);
-        margin-top: 10px;
+        padding: 10px;
       }
 
-      .card {
-        border-radius: 18px;
-        padding: 14px;
+      .top-header {
+        margin: -10px -10px 14px -10px;
+        border-radius: 0 0 22px 22px;
+        padding: 14px 12px;
       }
 
-      .top {
-        display: block;
+      .logo-box {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        font-size: 24px;
       }
 
-      h1 {
-        font-size: 23px;
-      }
-
-      .gallery {
+      .hero-layout {
         grid-template-columns: 1fr;
       }
 
-      .main-photo img {
-        height: 270px;
+      .gallery-panel {
+        border-left: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 12px;
+      }
+
+      .details-panel {
+        padding: 16px;
       }
 
       .thumbs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 7px;
       }
 
-      .thumb {
-        height: 108px;
-      }
-
-      .price {
-        font-size: 27px;
-      }
-
-      .room-grid {
-        grid-template-columns: 1fr;
+      .zoom-hint {
+        display: none;
       }
     }
   </style>
 </head>
-
 <body>
-  <main class="page" id="app">
-    <section class="loading">טוען את דף הדירה...</section>
-  </main>
+  <div class="page">
+    <header class="top-header">
+      <div class="top-header-inner">
+        <div class="logo-box" aria-label="לוגו">🏠</div>
+        <div class="header-title-wrap">
+          <div class="header-kicker">דף מידע לשוכר</div>
+          <h1 class="header-title" id="headerTitle">טוען דירה...</h1>
+        </div>
+      </div>
+    </header>
+
+    <main id="app">
+      <div class="loading">טוען את פרטי הדירה...</div>
+    </main>
+
+    <div class="footer">rent.html v269</div>
+  </div>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="סגירה">×</button>
+    <img id="lightboxImage" alt="">
+    <div class="lightbox-caption">לחיצה מחוץ לתמונה או Esc לסגירה</div>
+  </div>
 
   <script>
-    const RENT_PAGE_VERSION = "v261";
-    const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const TABLE_NAME = "rent_pages";
+    const SUPABASE_URL = "";
+    const SUPABASE_KEY = "";
+    const RENT_PAGE_VERSION = "v269";
 
-    const PHOTO_COLUMNS = [
+    const PHOTO_FIELDS = [
       "photo_main_url",
       "photo_2_url",
       "photo_3_url",
@@ -314,12 +429,32 @@
       "photo_8_url"
     ];
 
-    function getApartmentId() {
-      return new URLSearchParams(window.location.search).get("id") || "";
+    const params = new URLSearchParams(window.location.search);
+    const pageId = params.get("id") || "";
+
+    let currentImages = [];
+    let activeImageIndex = 0;
+
+    function cleanText(value) {
+      return String(value || "").trim();
+    }
+
+    function isUrl(value) {
+      return /^https?:\/\//i.test(cleanText(value));
+    }
+
+    function formatPrice(value) {
+      const text = cleanText(value);
+      if (!text) return "";
+      const numeric = Number(String(text).replace(/[^\d.]/g, ""));
+      if (Number.isFinite(numeric) && numeric > 0) {
+        return "₪" + numeric.toLocaleString("he-IL");
+      }
+      return text;
     }
 
     function escapeHtml(value) {
-      return String(value ?? "")
+      return String(value || "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -327,236 +462,276 @@
         .replaceAll("'", "&#039;");
     }
 
-    function safeText(value, fallback = "") {
-      const v = String(value ?? "").trim();
-      return v || fallback;
-    }
-
-    function formatPrice(value) {
-      const raw = String(value ?? "").trim();
-      if (!raw) return "";
-
-      const numeric = Number(raw.replace(/[^\d.]/g, ""));
-      if (!Number.isFinite(numeric) || numeric <= 0) {
-        return escapeHtml(raw);
-      }
-
-      return "₪" + numeric.toLocaleString("he-IL");
-    }
-
-    function collectPhotos(row) {
+    function getImages(row) {
       const urls = [];
-
-      PHOTO_COLUMNS.forEach((column) => {
-        const value = String(row?.[column] ?? "").trim();
-        if (/^https?:\/\//i.test(value) && !urls.includes(value)) {
+      PHOTO_FIELDS.forEach(function(field) {
+        const value = cleanText(row[field]);
+        if (isUrl(value) && !urls.includes(value)) {
           urls.push(value);
         }
       });
-
       return urls;
     }
 
     function parseRoomPrices(value) {
       if (!value) return [];
+      try {
+        const parsed = typeof value === "string" ? JSON.parse(value) : value;
 
-      let data = value;
-
-      if (typeof data === "string") {
-        try {
-          data = JSON.parse(data);
-        } catch {
-          return [];
+        if (Array.isArray(parsed)) {
+          return parsed
+            .map(function(item) {
+              if (!item) return null;
+              return {
+                room: cleanText(item.room || item.name || item.label),
+                price: cleanText(item.price || item.amount || item.value)
+              };
+            })
+            .filter(function(item) {
+              return item && (item.room || item.price);
+            });
         }
-      }
 
-      if (Array.isArray(data)) {
-        return data
-          .map((item) => ({
-            name: safeText(item.name || item.room || item.label),
-            price: safeText(item.price || item.amount || item.value)
-          }))
-          .filter((item) => item.name || item.price);
-      }
-
-      if (typeof data === "object") {
-        return Object.keys(data)
-          .map((key) => ({
-            name: key,
-            price: safeText(data[key])
-          }))
-          .filter((item) => item.name || item.price);
+        if (typeof parsed === "object") {
+          return Object.keys(parsed).map(function(key) {
+            return { room: key, price: cleanText(parsed[key]) };
+          });
+        }
+      } catch (err) {
+        return [];
       }
 
       return [];
     }
 
-    async function fetchRentRow(id) {
-      const endpoint =
-        SUPABASE_URL +
-        "/rest/v1/" +
-        TABLE_NAME +
-        "?id=eq." +
-        encodeURIComponent(id) +
-        "&select=*&limit=1";
+    function openLightbox(index) {
+      if (!currentImages.length) return;
 
-      const response = await fetch(endpoint, {
-        method: "GET",
-        cache: "no-store",
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-          "Accept": "application/json"
-        }
+      activeImageIndex = Math.max(0, Math.min(Number(index) || 0, currentImages.length - 1));
+
+      const lightbox = document.getElementById("lightbox");
+      const image = document.getElementById("lightboxImage");
+
+      image.src = currentImages[activeImageIndex];
+      image.alt = "תמונה מוגדלת של הדירה";
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      const lightbox = document.getElementById("lightbox");
+      const image = document.getElementById("lightboxImage");
+
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      image.removeAttribute("src");
+      document.body.style.overflow = "";
+    }
+
+    function setActiveImage(index) {
+      if (!currentImages.length) return;
+
+      activeImageIndex = Math.max(0, Math.min(Number(index) || 0, currentImages.length - 1));
+
+      const mainImage = document.getElementById("mainImage");
+      if (mainImage) {
+        mainImage.src = currentImages[activeImageIndex];
+      }
+
+      document.querySelectorAll(".thumb").forEach(function(button, i) {
+        button.classList.toggle("active", i === activeImageIndex);
       });
-
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error("HTTP " + response.status + " " + message);
-      }
-
-      const rows = await response.json();
-      return Array.isArray(rows) && rows.length ? rows[0] : null;
     }
 
-    function buildGallery(urls) {
-      if (!urls.length) {
-        return '<div class="empty">לא הועלו עדיין תמונות לדירה זו.</div>';
-      }
-
-      const thumbs = urls.map((url, index) => `
-        <button class="thumb ${index === 0 ? "active" : ""}" type="button" data-index="${index}">
-          <img src="${escapeHtml(url)}" alt="תמונה ${index + 1}" loading="${index < 4 ? "eager" : "lazy"}">
-        </button>
-      `).join("");
-
-      return `
-        <div class="gallery">
-          <div class="main-photo">
-            <img id="mainPhoto" src="${escapeHtml(urls[0])}" alt="תמונה ראשית" loading="eager">
-          </div>
-          <div class="thumbs">${thumbs}</div>
-        </div>
-        <div class="photo-count">${urls.length} תמונות</div>
-      `;
-    }
-
-    function buildRooms(roomPrices) {
+    function renderRoomPrices(roomPrices) {
       if (!roomPrices.length) return "";
 
-      const cards = roomPrices.map((item) => `
-        <div class="room-card">
-          <div class="room-name">${escapeHtml(item.name || "חדר")}</div>
-          <div class="room-price">${formatPrice(item.price)}</div>
-        </div>
-      `).join("");
-
       return `
-        <section class="room-section">
-          <h2>מחירי חדרים</h2>
-          <div class="room-grid">${cards}</div>
+        <section class="section">
+          <h2>מחירים לפי חדר</h2>
+          <div class="room-prices">
+            ${roomPrices.map(function(item) {
+              return `
+                <div class="room-price-row">
+                  <span>${escapeHtml(item.room || "חדר")}</span>
+                  <span>${escapeHtml(formatPrice(item.price))}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
         </section>
       `;
     }
 
-    function bindGallery(urls) {
-      const mainPhoto = document.getElementById("mainPhoto");
-      const buttons = Array.from(document.querySelectorAll(".thumb"));
+    function renderPage(row) {
+      const app = document.getElementById("app");
+      const headerTitle = document.getElementById("headerTitle");
 
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const index = Number(button.dataset.index || 0);
-          const url = urls[index];
+      const title = cleanText(row.title) || "דירה להשכרה";
+      const address = cleanText(row.address);
+      const price = formatPrice(row.price || row.starting_price);
+      const description = cleanText(row.description);
+      const details = cleanText(row.details);
+      const roomPrices = parseRoomPrices(row.room_prices_json);
 
-          if (!mainPhoto || !url) return;
+      currentImages = getImages(row);
+      activeImageIndex = 0;
 
-          mainPhoto.src = url;
-          buttons.forEach((btn) => btn.classList.remove("active"));
-          button.classList.add("active");
+      document.title = title;
+      headerTitle.textContent = title;
+
+      if (!currentImages.length) {
+        app.innerHTML = `<div class="empty">לא נמצאו תמונות לדירה זו.</div>`;
+        return;
+      }
+
+      app.innerHTML = `
+        <article class="main-card">
+          <div class="hero-layout">
+            <section class="gallery-panel">
+              <div class="main-image-wrap" id="mainImageWrap" title="לחץ לפתיחת התמונה בגדול">
+                <img id="mainImage" src="${escapeHtml(currentImages[0])}" alt="${escapeHtml(title)}">
+                <div class="image-count">${currentImages.length} תמונות</div>
+                <div class="zoom-hint">לחץ להגדלה</div>
+              </div>
+
+              <div class="thumbs">
+                ${currentImages.map(function(url, index) {
+                  return `
+                    <button type="button" class="thumb ${index === 0 ? "active" : ""}" data-index="${index}" aria-label="תמונה ${index + 1}">
+                      <img src="${escapeHtml(url)}" alt="תמונה ${index + 1}">
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </section>
+
+            <section class="details-panel">
+              ${address ? `<div class="address">${escapeHtml(address)}</div>` : ""}
+
+              ${price ? `
+                <div class="price-box">
+                  <div class="price-label">מחיר</div>
+                  <div class="price-value">${escapeHtml(price)}</div>
+                </div>
+              ` : ""}
+
+              ${description ? `
+                <section class="section">
+                  <h2>תיאור הדירה</h2>
+                  <p>${escapeHtml(description)}</p>
+                </section>
+              ` : ""}
+
+              ${details ? `
+                <section class="section">
+                  <h2>פרטים</h2>
+                  <p>${escapeHtml(details)}</p>
+                </section>
+              ` : ""}
+
+              ${renderRoomPrices(roomPrices)}
+            </section>
+          </div>
+        </article>
+      `;
+
+      document.getElementById("mainImageWrap").addEventListener("click", function() {
+        openLightbox(activeImageIndex);
+      });
+
+      document.querySelectorAll(".thumb").forEach(function(button) {
+        button.addEventListener("click", function() {
+          setActiveImage(Number(button.dataset.index));
         });
       });
     }
 
-    function render(row) {
+    async function loadPage() {
       const app = document.getElementById("app");
-      const photos = collectPhotos(row);
 
-      const title = safeText(row.title, "דירה להשכרה");
-      const address = safeText(row.address, "");
-      const details = safeText(row.details || row.description, "");
-      const price = formatPrice(row.price || row.starting_price);
-      const isStartingPrice = Boolean(row.starting_price) || Boolean(row.room_prices_json);
-      const roomPrices = parseRoomPrices(row.room_prices_json);
-
-      document.title = title;
-
-      app.innerHTML = `
-        <section class="card">
-          <div class="top">
-            <div>
-              <div class="badge">${row.is_available === false ? "לא זמין" : "זמין להשכרה"}</div>
-              <h1>${escapeHtml(title)}</h1>
-              ${address ? `<div class="address">${escapeHtml(address)}</div>` : ""}
-            </div>
-          </div>
-
-          ${buildGallery(photos)}
-        </section>
-
-        <section class="card">
-          ${price ? `
-            <div class="price-box">
-              <div>
-                <div class="price-label">${isStartingPrice ? "מחיר החל מ-" : "מחיר"}</div>
-                <div class="price-sub">לא כולל חשמל ומים</div>
-              </div>
-              <div class="price">${price}</div>
-            </div>
-          ` : ""}
-
-          ${details ? `<div class="details">${escapeHtml(details)}</div>` : ""}
-
-          ${buildRooms(roomPrices)}
-        </section>
-
-        <div class="version">rent.html ${RENT_PAGE_VERSION}</div>
-      `;
-
-      bindGallery(photos);
-      console.log("rent.html v261 loaded. Photo count:", photos.length, photos);
-    }
-
-    function renderError(message) {
-      document.getElementById("app").innerHTML = `
-        <section class="error">${escapeHtml(message)}</section>
-        <div class="version">rent.html ${RENT_PAGE_VERSION}</div>
-      `;
-    }
-
-    async function main() {
-      const id = getApartmentId();
-
-      if (!id) {
-        renderError("לא נבחר מזהה דירה.");
+      if (!pageId) {
+        app.innerHTML = `<div class="error">לא נבחר מזהה דירה בקישור.</div>`;
+        document.getElementById("headerTitle").textContent = "דף דירה";
         return;
       }
 
       try {
-        const row = await fetchRentRow(id);
+        const endpoint =
+          SUPABASE_URL +
+          "/rest/v1/rent_pages?id=eq." +
+          encodeURIComponent(pageId) +
+          "&select=*";
 
-        if (!row) {
-          renderError("דף הדירה לא נמצא.");
+        const response = await fetch(endpoint, {
+          method: "GET",
+          cache: "no-store",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY,
+            "Accept": "application/json",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache"
+          }
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error("HTTP " + response.status + ": " + text);
+        }
+
+        const rows = await response.json();
+
+        if (!Array.isArray(rows) || !rows.length) {
+          app.innerHTML = `<div class="error">הדירה לא נמצאה.</div>`;
+          document.getElementById("headerTitle").textContent = "הדירה לא נמצאה";
           return;
         }
 
-        render(row);
+        const best = rows
+          .map(function(item) {
+            return { row: item, count: getImages(item).length };
+          })
+          .sort(function(a, b) {
+            return b.count - a.count;
+          })[0].row;
+
+        renderPage(best);
       } catch (err) {
         console.error(err);
-        renderError("אירעה שגיאה בטעינת דף הדירה.");
+        app.innerHTML = `<div class="error">אירעה שגיאה בטעינת הדף.</div>`;
+        document.getElementById("headerTitle").textContent = "שגיאה בטעינה";
       }
     }
 
-    main();
+    document.getElementById("lightboxClose").addEventListener("click", closeLightbox);
+
+    document.getElementById("lightbox").addEventListener("click", function(event) {
+      if (event.target && event.target.id === "lightbox") {
+        closeLightbox();
+      }
+    });
+
+    document.addEventListener("keydown", function(event) {
+      const lightboxIsOpen = document.getElementById("lightbox").classList.contains("open");
+
+      if (event.key === "Escape") {
+        closeLightbox();
+      }
+
+      if (lightboxIsOpen && event.key === "ArrowRight") {
+        setActiveImage(activeImageIndex + 1);
+        openLightbox(activeImageIndex);
+      }
+
+      if (lightboxIsOpen && event.key === "ArrowLeft") {
+        setActiveImage(activeImageIndex - 1);
+        openLightbox(activeImageIndex);
+      }
+    });
+
+    loadPage();
   </script>
 </body>
 </html>
