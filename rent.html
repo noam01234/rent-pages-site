@@ -60,28 +60,27 @@
     
       flex-direction: row-reverse;
       text-align: right;
+    
     }
 
     .logo-box {
-      width: 56px;
-      height: 56px;
-      border-radius: 17px;
-      background: rgba(255, 255, 255, 0.17);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      width: 128px;
+      height: 78px;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       flex: 0 0 auto;
-      overflow: hidden;
-      font-size: 28px;
-      font-weight: 900;
+      overflow: visible;
     }
     .logo-box img {
-      width: 100%;
-      height: 100%;
+      width: 128px;
+      height: 78px;
       object-fit: contain;
       display: block;
-      padding: 6px;
+      padding: 0;
     }
 
     .header-title-wrap {
@@ -367,17 +366,29 @@
       }
 
       .logo-box {
-        width: 46px;
-        height: 46px;
-        border-radius: 14px;
-        font-size: 24px;
+      width: 128px;
+      height: 78px;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      overflow: visible;
+      .logo-box img {
+        width: 98px;
+        height: 60px;
+        object-fit: contain;
+        padding: 0;
       }
+    }
     .logo-box img {
-      width: 100%;
-      height: 100%;
+      width: 128px;
+      height: 78px;
       object-fit: contain;
       display: block;
-      padding: 6px;
+      padding: 0;
     }
 
       .hero-layout {
@@ -420,7 +431,7 @@
       <div class="loading">טוען את פרטי הדירה...</div>
     </main>
 
-    <div class="footer">rent.html v276</div>
+    <div class="footer">rent.html v279</div>
   </div>
 
   <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -432,7 +443,7 @@
   <script>
     const SUPABASE_URL = "https://erhfqlcfwjqehffxetbv.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyaGZxbGNmd2pxZWhmZnhldGJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTU4OTAsImV4cCI6MjA5NjE3MTg5MH0.Cq0tiB4NP17E5O_cB4dPNmFk_dl7FYxwQq75p4tlOZc";
-    const RENT_PAGE_VERSION = "v276";
+    const RENT_PAGE_VERSION = "v279";
 
     const PHOTO_FIELDS = [
       "photo_main_url",
@@ -499,7 +510,7 @@
             .map(function(item) {
               if (!item) return null;
               return {
-                room: cleanText(item.room || item.name || item.label),
+                room: cleanText(item.roomName || item.room || item.name || item.label),
                 price: cleanText(item.price || item.amount || item.value)
               };
             })
@@ -751,5 +762,6 @@
   </script>
 </body>
 </html>
+
 
 
